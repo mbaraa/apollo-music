@@ -1,4 +1,4 @@
-module salsa
+module github.com/mbaraa/apollo-music
 
 go 1.20
 

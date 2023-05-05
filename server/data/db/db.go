@@ -2,7 +2,8 @@ package db
 
 import (
 	"fmt"
-	"salsa/config"
+
+	"github.com/mbaraa/apollo-music/config"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -12,12 +13,12 @@ var instance *gorm.DB = nil
 
 // GetDBConnector returns a singleton mysql connection instance to the application's DB
 func GetDBConnector() *gorm.DB {
-	return getDBConnector("salsa")
+	return getDBConnector("apollo-music")
 }
 
 // GetTestDBConnector returns a singleton mysql connection instance to the application's test DB
 func GetTestDBConnector() *gorm.DB {
-	return getDBConnector("salsa").Debug()
+	return getDBConnector("apollo-music").Debug()
 }
 
 // getDBConnector returns a singleton mysql connection instance

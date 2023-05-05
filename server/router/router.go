@@ -1,8 +1,8 @@
 package router
 
 import (
-	"salsa/config"
-	"salsa/controllers"
+	"github.com/mbaraa/apollo-music/config"
+	"github.com/mbaraa/apollo-music/controllers"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -18,7 +18,7 @@ func Start() {
 
 func init() {
 	server = fiber.New(fiber.Config{
-		AppName: "Salsa",
+		AppName: "Apollo Music",
 	})
 
 	for _, controller := range controllers.GetControllers() {

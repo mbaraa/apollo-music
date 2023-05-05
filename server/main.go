@@ -1,6 +1,6 @@
 package main
 
-import "salsa/router"
+import "github.com/mbaraa/apollo-music/router"
 
 func main() {
 	router.Start()

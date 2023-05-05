@@ -8,10 +8,13 @@ import (
 )
 
 func init() {
-	godotenv.Load()
-	if len(MachineAddress()) == 0 {
-		os.Setenv("MACHINE_IP", getMachineIP())
+	err := godotenv.Load()
+	if err != nil {
+		panic(err)
 	}
+	// if len(MachineAddress()) == 0 {
+	// os.Setenv("MACHINE_IP", getMachineIP())
+	// }
 }
 
 func PortNumber() string     { return os.Getenv("PORT") }
@@ -22,6 +25,7 @@ func AllowedClients() string { return os.Getenv("ALLOWED_CLIENTS") }
 func MachineAddress() string { return os.Getenv("MACHINE_IP") }
 func JWTSecret() []byte      { return []byte(os.Getenv("JWT_SECRET")) }
 func Development() bool      { return os.Getenv("DEVELOPMENT") == "true" }
+func MusicDirectory() string { return os.Getenv("MUSIC_DIRECTORY") }
 
 func getMachineIP() string {
 	conn, err := net.Dial("udp", "8.8.8.8:"+PortNumber())

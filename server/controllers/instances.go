@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"salsa/controllers/apis"
-	"salsa/controllers/sockets"
+	"github.com/mbaraa/apollo-music/controllers/apis"
+	"github.com/mbaraa/apollo-music/controllers/sockets"
 )
 
 var bindables []Bindable = []Bindable{
+	apis.NewLsMusicApi(),
 	apis.NewExampleApi(),
 	sockets.NewEchoSocket(),
 }

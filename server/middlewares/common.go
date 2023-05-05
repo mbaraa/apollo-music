@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"salsa/config"
+	"github.com/mbaraa/apollo-music/config"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
