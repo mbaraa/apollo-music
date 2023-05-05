@@ -1,0 +1,35 @@
+{
+	"name": "Apollo",
+	"short_name": "Apollo",
+	"start_url": "/",
+	"icons": [
+		{
+			"src": "favicon.ico",
+			"sizes": "48x48",
+			"type": "image/x-icon"
+		},
+		{
+			"src": "/android-chrome-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/android-chrome-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	],
+	"theme_color": "#121212",
+	"background_color": "#121212",
+	"display": "standalone",
+	"shortcuts": [
+		{
+			"name": "Albums",
+			"short_name": "Albums",
+			"description": "View albums",
+			"url": "/albums",
+			"icons": [{ "src": "favicon-32x32.png", "sizes": "32x32" }]
+		}
+	],
+	"description": "Apollo the coolest cloud music player!"
+}
