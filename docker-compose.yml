@@ -13,21 +13,20 @@ services:
     volumes:
       - db-config:/etc/mysql
       - db-data:/var/lib/mysql
-      # - ./server/data/db/init.sql:/docker-entrypoint-initdb.d
     networks:
       - apollo-music
 
-  apollo-music-app:
+  apollo-music-backend:
     build:
       dockerfile: Dockerfile
       context: "./server"
-    container_name: "apollo-music-app"
+    container_name: "apollo-music-backend"
     depends_on:
       - apollo-music-db
     # restart: "unless-stopped"
     restart: "always"
     ports:
-      - "8080:8080"
+      - "1214:8080"
     stdin_open: true
     tty: true
     networks:
@@ -38,11 +37,11 @@ services:
       dockerfile: Dockerfile
       context: "./client"
     depends_on:
-      - apollo-music-app
+      - apollo-music-backend
     # restart: "unless-stopped"
     restart: "always"
     ports:
-      - "8081:3000"
+      - "1412:3000"
     stdin_open: true
     tty: true
 

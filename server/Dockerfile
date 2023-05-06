@@ -13,7 +13,7 @@ FROM alpine:latest as run
 WORKDIR /app
 
 COPY --from=build /app/apollo-music ./run
-COPY --from=build /app/config.json ./
+COPY --from=build /app/.env ./
 
 EXPOSE 8080
 
