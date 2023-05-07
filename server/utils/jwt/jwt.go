@@ -1,6 +1,10 @@
 package jwt
 
-import "time"
+import (
+	"time"
+
+	"github.com/golang-jwt/jwt/v4"
+)
 
 // Subject represents the token's subject
 type Subject = string
@@ -12,6 +16,12 @@ const (
 	PasswordRestToken Subject = "PASSWORD_RESET_TOKEN"
 	InactiveUserToken Subject = "INACTIVE_USER_TOKEN"
 )
+
+// Claims is iondsa, it's just JWT claims blyat!
+type Claims[T any] struct {
+	jwt.RegisteredClaims
+	Payload T `json:"payload"`
+}
 
 // Signer is a wrapper to JWT signing method using the set JWT secret,
 // claims are set(mostly unique) in each implementation of the thing
@@ -27,7 +37,7 @@ type Validator interface {
 // Decoder is a wrapper to JWT decoding stuff, based on the implementation's claims,
 // this interface is usually implemented with the other two(Signer and Validator), because reasons...
 type Decoder[T any] interface {
-	Decode(token string, subject Subject) (T, error)
+	Decode(token string, subject Subject) (Claims[T], error)
 }
 
 // Manager is a wrapper to JWT operations, so I don't do much shit each time I work with JWT

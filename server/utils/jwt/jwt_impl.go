@@ -8,19 +8,12 @@ import (
 	aerrors "github.com/mbaraa/apollo-music/errors"
 
 	"github.com/mbaraa/apollo-music/config/env"
-	"github.com/mbaraa/apollo-music/models"
 
 	"github.com/golang-jwt/jwt/v4"
 )
 
 // interface checker
 var _ Manager[entities.JSON] = &JWTImpl{}
-
-// Claims is iondsa, it's just JWT claims blyat!
-type Claims[T any] struct {
-	jwt.RegisteredClaims
-	Payload entities.JSON `json:"payload"`
-}
 
 // JWTImpl implements JWTManager to verify session tokens
 type JWTImpl struct{}
@@ -38,7 +31,7 @@ func (s *JWTImpl) Sign(data entities.JSON, subject Subject, expTime time.Time) (
 	expirationDate := jwt.NumericDate{Time: expTime}
 	currentTime := jwt.NumericDate{Time: time.Now().UTC()}
 
-	claims := Claims[models.User]{
+	claims := Claims[entities.JSON]{
 		Payload: data,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: &expirationDate,
@@ -71,12 +64,12 @@ func (s *JWTImpl) Validate(token string, subject Subject) error {
 }
 
 // Decode decodes the given token using the set JWT secret
-func (s *JWTImpl) Decode(token string, subject Subject) (entities.JSON, error) {
+func (s *JWTImpl) Decode(token string, subject Subject) (Claims[entities.JSON], error) {
 	if len(token) == 0 {
-		return nil, errors.New("empty token")
+		return Claims[entities.JSON]{}, errors.New("empty token")
 	}
 
-	claims := Claims[models.User]{}
+	claims := Claims[entities.JSON]{}
 
 	_, err := jwt.ParseWithClaims(token, &claims, func(token *jwt.Token) (interface{}, error) {
 		if claims.Subject != subject {
@@ -90,8 +83,8 @@ func (s *JWTImpl) Decode(token string, subject Subject) (entities.JSON, error) {
 	})
 
 	if err != nil {
-		return nil, err
+		return Claims[entities.JSON]{}, err
 	}
 
-	return claims.Payload, nil
+	return claims, nil
 }
