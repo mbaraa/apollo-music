@@ -7,7 +7,10 @@ import (
 )
 
 var bindables []Bindable = []Bindable{
-	apis.NewAuthApi(helpers.NewEmailHelper(config.UserRepo(), config.VerificationRepo(), config.JWTUtil())),
+	apis.NewAuthApi(
+		helpers.NewEmailHelper(config.UserRepo(), config.VerificationRepo(), config.JWTUtil()),
+		helpers.NewOTPHelper(config.VerificationRepo(), config.UserRepo(), config.JWTUtil()),
+	),
 }
 
 func GetControllers() []Bindable {
