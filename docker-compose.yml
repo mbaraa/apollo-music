@@ -27,6 +27,11 @@ services:
     restart: "always"
     ports:
       - "1214:8080"
+    env_file: ./server/.env
+    environment:
+      MUSIC_DIRECTORY: "/music"
+    volumes:
+      - music-dir:/music
     stdin_open: true
     tty: true
     networks:
@@ -48,6 +53,12 @@ services:
 volumes:
   db-config:
   db-data:
+  music-dir:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: .
 
 networks:
   apollo-music: {}
