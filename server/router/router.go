@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/mbaraa/apollo-music/config"
+	"github.com/mbaraa/apollo-music/config/env"
 	"github.com/mbaraa/apollo-music/controllers"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,7 +10,7 @@ import (
 var server *fiber.App = nil
 
 func Start() {
-	err := server.Listen(":" + config.PortNumber())
+	err := server.Listen(":" + env.PortNumber())
 	if err != nil {
 		panic(err)
 	}

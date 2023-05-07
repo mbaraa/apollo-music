@@ -21,6 +21,7 @@ const (
 	InvalidOTP
 	InvalidToken
 	InsufficientFunds
+	InvalidCredentials
 )
 
 // String returns the error's corresponidng string
@@ -52,6 +53,7 @@ var errorMessages = map[ErrorCode]string{
 	InvalidOTP:            "Invalid OTP%s",
 	InvalidToken:          "Invalid token%s",
 	InsufficientFunds:     "Insufficient funds%s",
+	InvalidCredentials:    "Invalid credentials%s",
 }
 
 var errorHttpStatuses = map[ErrorCode]int{
@@ -70,4 +72,5 @@ var errorHttpStatuses = map[ErrorCode]int{
 	InvalidOTP:            401,
 	InvalidToken:          401,
 	InsufficientFunds:     400,
+	InvalidCredentials:    401,
 }

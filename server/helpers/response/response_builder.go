@@ -3,6 +3,7 @@ package response
 import (
 	"reflect"
 
+	"github.com/mbaraa/apollo-music/entities"
 	"github.com/mbaraa/apollo-music/errors"
 )
 
@@ -14,23 +15,20 @@ const (
 )
 
 type responseTemplate struct {
-	Status     responseStatus   `json:"status"`
-	HttpStatus int              `json:"-"`
-	Body       any              `json:"body"`
-	ErrorCode  errors.ErrorCode `json:"errorCode"`
-	ErrorMsg   string           `json:"errorMsg"`
+	Status    responseStatus   `json:"status"`
+	Data      any              `json:"data"`
+	ErrorCode errors.ErrorCode `json:"errorCode"`
+	ErrorMsg  string           `json:"errorMsg"`
 }
 
-type json map[string]any
-
-// BuildResponse accepts an error code and a body,
+// Build accepts an error code and a data,
 // and returns a json response and an http status code, following this template
 //
-// {status: "ok" | "error", body?: {}, errorCode: number, errorMsg: string}
+// {status: "ok" | "error", data?: {}, errorCode: number, errorMsg: string}
 //
-// where a `body` will only exist if the response is without any errors,
+// where a `data` will only exist if the response is without any errors,
 // and `errorCode` & `errorMsg` will exist only on errors
-func BuildResponse(errCode errors.ErrorCode, body any) (json, int) {
+func Build(errCode errors.ErrorCode, data any) (entities.JSON, int) {
 	resp := map[string]any{
 		"status": ok,
 	}
@@ -42,8 +40,9 @@ func BuildResponse(errCode errors.ErrorCode, body any) (json, int) {
 		return resp, errCode.StatusCode()
 	}
 
-	if reflect.TypeOf(body).Kind() == reflect.Struct {
-		resp["body"] = body
+	dataKind := reflect.TypeOf(data).Kind()
+	if dataKind == reflect.Struct || dataKind == reflect.Map {
+		resp["data"] = data
 	}
 	return resp, 200
 }

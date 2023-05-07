@@ -1,44 +1,38 @@
 package config
 
 import (
-	"net"
-	"os"
+	"github.com/mbaraa/apollo-music/data"
+	"github.com/mbaraa/apollo-music/data/db"
+	"github.com/mbaraa/apollo-music/entities"
+	"github.com/mbaraa/apollo-music/models"
+	"github.com/mbaraa/apollo-music/utils/jwt"
+)
 
-	"github.com/joho/godotenv"
+var (
+	dbConnection     = db.GetDBConnector()
+	userRepo         data.CRUDRepo[models.User]
+	verificationRepo data.CRUDRepo[models.Verification]
+)
+
+var (
+	jwtUtil jwt.Manager[entities.JSON]
 )
 
 func init() {
-	err := godotenv.Load()
-	if err != nil {
-		panic(err)
-	}
-	// if len(MachineAddress()) == 0 {
-	// os.Setenv("MACHINE_IP", getMachineIP())
-	// }
+	db.InitTables()
+	userRepo = db.NewBaseDB[models.User](dbConnection)
+	verificationRepo = db.NewBaseDB[models.Verification](dbConnection)
+	jwtUtil = jwt.NewJWTImpl()
 }
 
-func PortNumber() string     { return os.Getenv("PORT") }
-func DBUser() string         { return os.Getenv("DB_USER") }
-func DBPassword() string     { return os.Getenv("DB_PASSWORD") }
-func DBHost() string         { return os.Getenv("DB_HOST") }
-func AllowedClients() string { return os.Getenv("ALLOWED_CLIENTS") }
-func MachineAddress() string { return os.Getenv("MACHINE_IP") }
-func JWTSecret() []byte      { return []byte(os.Getenv("JWT_SECRET")) }
-func Development() bool      { return os.Getenv("DEVELOPMENT") == "true" }
-func MusicDirectory() string { return os.Getenv("MUSIC_DIRECTORY") }
+func UserRepo() data.CRUDRepo[models.User] {
+	return userRepo
+}
 
-func getMachineIP() string {
-	conn, err := net.Dial("udp", "8.8.8.8:"+PortNumber())
-	if err != nil {
-		panic(err)
-	}
+func VerificationRepo() data.CRUDRepo[models.Verification] {
+	return verificationRepo
+}
 
-	err = conn.Close()
-	if err != nil {
-		panic(err)
-	}
-
-	localAddr := conn.LocalAddr().(*net.UDPAddr)
-
-	return localAddr.IP.String()
+func JWTUtil() jwt.Manager[entities.JSON] {
+	return jwtUtil
 }

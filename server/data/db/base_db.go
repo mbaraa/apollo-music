@@ -3,11 +3,13 @@ package db
 import (
 	"errors"
 
+	"github.com/mbaraa/apollo-music/models"
 	"gorm.io/gorm"
 )
 
 // AllowedModels defines allowed models to be used in the db
 type AllowedModels interface {
+	models.User | models.Verification
 	GetId() uint
 }
 
@@ -17,10 +19,8 @@ type BaseDB[T AllowedModels] struct {
 	zero T
 }
 
-// newBaseDB returns a new BaseDB instance for the required type,
-// it's not an exported function because it's not a safe one,
-// since it might cause lots of db connections and that's wack!
-func newBaseDB[T AllowedModels](db *gorm.DB) *BaseDB[T] {
+// NewBaseDB returns a new BaseDB instance for the required type,
+func NewBaseDB[T AllowedModels](db *gorm.DB) *BaseDB[T] {
 	return &BaseDB[T]{db: db}
 }
 

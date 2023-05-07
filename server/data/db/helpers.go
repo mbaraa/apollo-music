@@ -1,5 +1,21 @@
 package db
 
+import "github.com/mbaraa/apollo-music/models"
+
+func InitTables() {
+	if instance != nil {
+		err := instance.AutoMigrate(
+			new(models.User),
+			new(models.Verification),
+		)
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		panic("No DB connection was initialized")
+	}
+}
+
 // checkConds reports whether the provided conditions are valid or not
 func checkConds(conds ...any) bool {
 	return len(conds) > 1 && checkCondsMeaning(conds...)

@@ -1,25 +1,27 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"github.com/mbaraa/apollo-music/enums"
+	"github.com/mbaraa/apollo-music/utils/strings"
+	"gorm.io/gorm"
+)
 
 // User is the user's model
 type User struct {
-	gorm.Model
-	Id       uint   `gorm:"primaryKey;autoIncrement"`
-	PublicId string `gorm:"unique"`
-	FullName string `gorm:"not null"`
-	Email    string `gorm:"unique"`
-	Password string
-	IsOAuth  bool
-	Status   UserStatus
+	gorm.Model `json:"-"`
+	Id         uint             `gorm:"primaryKey;autoIncrement" json:"-"`
+	PublicId   string           `gorm:"unique" json:"publicId"`
+	FullName   string           `gorm:"not null" json:"fullName"`
+	Email      string           `gorm:"unique" json:"email"`
+	Password   string           `json:"-"`
+	Status     enums.UserStatus `json:"status"`
 }
 
-// UserStatus represents the user's current subscription status
-// where an active user is a user with a free subscription or an ongoing paid subscription
-// and an inactive user is a user with an overdue subscription by 10 days
-type UserStatus string
+func (u User) GetId() uint {
+	return u.Id
+}
 
-const (
-	ActiveStatus   UserStatus = "ACTIVE"
-	InactiveStatus UserStatus = "INACTIVE"
-)
+func (u *User) BeforeCreate(_ *gorm.DB) error {
+	u.PublicId = strings.GeneratePublicId()
+	return nil
+}

@@ -1,14 +1,13 @@
 package controllers
 
 import (
+	"github.com/mbaraa/apollo-music/config"
 	"github.com/mbaraa/apollo-music/controllers/apis"
-	"github.com/mbaraa/apollo-music/controllers/sockets"
+	"github.com/mbaraa/apollo-music/helpers"
 )
 
 var bindables []Bindable = []Bindable{
-	apis.NewLsMusicApi(),
-	apis.NewExampleApi(),
-	sockets.NewEchoSocket(),
+	apis.NewAuthApi(helpers.NewEmailHelper(config.UserRepo(), config.VerificationRepo(), config.JWTUtil())),
 }
 
 func GetControllers() []Bindable {
