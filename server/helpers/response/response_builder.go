@@ -40,9 +40,11 @@ func Build(errCode errors.ErrorCode, data any) (entities.JSON, int) {
 		return resp, errCode.StatusCode()
 	}
 
-	dataKind := reflect.TypeOf(data).Kind()
-	if dataKind == reflect.Struct || dataKind == reflect.Map {
-		resp["data"] = data
+	if data != nil {
+		dataKind := reflect.TypeOf(data).Kind()
+		if dataKind == reflect.Struct || dataKind == reflect.Map {
+			resp["data"] = data
+		}
 	}
 	return resp, 200
 }

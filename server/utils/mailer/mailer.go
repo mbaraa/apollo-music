@@ -25,6 +25,18 @@ func SendOTP(otp, to string) error {
 	return sendEmail("Email verification", buf.String(), to)
 }
 
+func SendPasswordReset(link, to string) error {
+	buf := new(strings.Builder)
+	err := templates.ExecuteTemplate(buf, "password-reset", map[string]string{
+		"ResetLink": link,
+	})
+	if err != nil {
+		return err
+	}
+
+	return sendEmail("Password reset", buf.String(), to)
+}
+
 func sendEmail(subject, content, to string) error {
 	receiver := []string{to}
 

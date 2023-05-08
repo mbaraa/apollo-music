@@ -32,6 +32,7 @@ func MailerHost() string         { return os.Getenv("MAILER_HOST") }
 func MailerPort() string         { return os.Getenv("MAILER_PORT") }
 func MailerFrom() string         { return os.Getenv("MAILER_FROM") }
 func MailerPassword() string     { return os.Getenv("MAILER_PASSWORD") }
+func FrontendAddress() string    { return os.Getenv("FRONTEND_ADDRESS") }
 
 func getMachineIP() string {
 	conn, err := net.Dial("udp", "8.8.8.8:"+PortNumber())

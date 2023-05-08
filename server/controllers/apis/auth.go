@@ -10,14 +10,20 @@ import (
 )
 
 type AuthApi struct {
-	helper    *helpers.EmailHelper
-	otpHelper *helpers.OTPHelper
+	helper              *helpers.EmailHelper
+	otpHelper           *helpers.OTPHelper
+	passwordResetHelper *helpers.PasswordResetHelper
 }
 
-func NewAuthApi(helper *helpers.EmailHelper, otpHelper *helpers.OTPHelper) *AuthApi {
+func NewAuthApi(
+	helper *helpers.EmailHelper,
+	otpHelper *helpers.OTPHelper,
+	passwordResetHelper *helpers.PasswordResetHelper,
+) *AuthApi {
 	return &AuthApi{
-		helper:    helper,
-		otpHelper: otpHelper,
+		helper:              helper,
+		otpHelper:           otpHelper,
+		passwordResetHelper: passwordResetHelper,
 	}
 }
 
@@ -36,6 +42,10 @@ func (a *AuthApi) Bind(app *fiber.App) {
 	otp := auth.Group("/otp")
 	otp.Post("/verify", a.handleVerifyOTP)
 	otp.Get("/resend", a.handleResendOTP)
+
+	passwordReset := auth.Group("/password")
+	passwordReset.Post("/reset", a.handleResetPassword)
+	passwordReset.Post("/update", a.handleUpdatePassword)
 }
 
 func (a *AuthApi) handleEmailSignin(ctx *fiber.Ctx) error {
@@ -99,5 +109,42 @@ func (a *AuthApi) handleResendOTP(ctx *fiber.Ctx) error {
 	}
 
 	resp, status = a.otpHelper.ResendOTP(token)
+	return ctx.Status(status).JSON(resp)
+}
+
+func (a *AuthApi) handleResetPassword(ctx *fiber.Ctx) error {
+	var (
+		resp   entities.JSON
+		status int
+		body   struct {
+			UserEmail string `json:"userEmail"`
+		}
+	)
+	err := ctx.BodyParser(&body)
+	if err != nil {
+		resp, status = response.Build(errors.BadRequest, nil)
+		return ctx.Status(status).JSON(resp)
+	}
+
+	resp, status = a.passwordResetHelper.ResetPassword(body.UserEmail)
+	return ctx.Status(status).JSON(resp)
+}
+
+func (a *AuthApi) handleUpdatePassword(ctx *fiber.Ctx) error {
+	var (
+		resp   entities.JSON
+		status int
+		body   struct {
+			NewPassword string `json:"newPassword"`
+		}
+		token = ctx.Get("Authorization")
+	)
+	err := ctx.BodyParser(&body)
+	if len(token) == 0 && err != nil {
+		resp, status = response.Build(errors.BadRequest, nil)
+		return ctx.Status(status).JSON(resp)
+	}
+
+	resp, status = a.passwordResetHelper.UpdatePassword(token, body.NewPassword)
 	return ctx.Status(status).JSON(resp)
 }
