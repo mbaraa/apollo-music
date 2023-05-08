@@ -5,6 +5,7 @@ import (
 
 	"github.com/mbaraa/apollo-music/data"
 	"github.com/mbaraa/apollo-music/entities"
+	"github.com/mbaraa/apollo-music/enums"
 	"github.com/mbaraa/apollo-music/errors"
 	"github.com/mbaraa/apollo-music/helpers/response"
 	"github.com/mbaraa/apollo-music/models"
@@ -52,9 +53,16 @@ func (o *OTPHelper) VerifyOTP(token, verificationCode string) (entities.JSON, in
 		return response.Build(errors.InvalidOTP, nil)
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(verification[0].OTP), []byte(verificationCode))
+	err = bcrypt.CompareHashAndPassword([]byte(verification[len(verification)-1].OTP), []byte(verificationCode))
 	if err != nil {
 		return response.Build(errors.InvalidOTP, nil)
+	}
+
+	err = o.userRepo.Update(&models.User{
+		Status: enums.ActiveStatus,
+	}, "id = ?", dbUser[0].Id)
+	if err != nil {
+		return response.Build(errors.InternalServerError, nil)
 	}
 
 	checkoutToken, err := o.jwtUtil.Sign(entities.JSON{
@@ -65,7 +73,7 @@ func (o *OTPHelper) VerifyOTP(token, verificationCode string) (entities.JSON, in
 		return response.Build(errors.InternalServerError, nil)
 	}
 
-	err = o.repo.Delete("id = ?", verification[0].Id)
+	err = o.repo.Delete("id = ?", verification[len(verification)-1].Id)
 	if err != nil {
 		return response.Build(errors.InternalServerError, nil)
 	}
