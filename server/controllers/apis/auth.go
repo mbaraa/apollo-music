@@ -13,17 +13,20 @@ type AuthApi struct {
 	helper              *helpers.EmailHelper
 	otpHelper           *helpers.OTPHelper
 	passwordResetHelper *helpers.PasswordResetHelper
+	sessionHelper       *helpers.SessionHelper
 }
 
 func NewAuthApi(
 	helper *helpers.EmailHelper,
 	otpHelper *helpers.OTPHelper,
 	passwordResetHelper *helpers.PasswordResetHelper,
+	sessionHelper *helpers.SessionHelper,
 ) *AuthApi {
 	return &AuthApi{
 		helper:              helper,
 		otpHelper:           otpHelper,
 		passwordResetHelper: passwordResetHelper,
+		sessionHelper:       sessionHelper,
 	}
 }
 
@@ -46,6 +49,9 @@ func (a *AuthApi) Bind(app *fiber.App) {
 	passwordReset := auth.Group("/password")
 	passwordReset.Post("/reset", a.handleResetPassword)
 	passwordReset.Post("/update", a.handleUpdatePassword)
+
+	session := auth.Group("/session")
+	session.Post("/verify", a.handleVerifySession)
 }
 
 func (a *AuthApi) handleEmailSignin(ctx *fiber.Ctx) error {
@@ -148,5 +154,20 @@ func (a *AuthApi) handleUpdatePassword(ctx *fiber.Ctx) error {
 	}
 
 	resp, status = a.passwordResetHelper.UpdatePassword(token, body.NewPassword)
+	return ctx.Status(status).JSON(resp)
+}
+
+func (a *AuthApi) handleVerifySession(ctx *fiber.Ctx) error {
+	var (
+		resp   entities.JSON
+		status int
+		token  = ctx.Get("Authorization")
+	)
+	if len(token) == 0 {
+		resp, status = response.Build(errors.BadRequest, nil)
+		return ctx.Status(status).JSON(resp)
+	}
+
+	resp, status = a.sessionHelper.VerifySession(token)
 	return ctx.Status(status).JSON(resp)
 }

@@ -11,6 +11,7 @@ var bindables []Bindable = []Bindable{
 		helpers.NewEmailHelper(config.UserRepo(), config.VerificationRepo(), config.JWTUtil()),
 		helpers.NewOTPHelper(config.VerificationRepo(), config.UserRepo(), config.JWTUtil()),
 		helpers.NewPasswordResetHelper(config.UserRepo(), config.JWTUtil()),
+		helpers.NewSessionHelper(config.UserRepo(), config.JWTUtil()),
 	),
 }
 
