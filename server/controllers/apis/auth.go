@@ -84,8 +84,10 @@ func (a *AuthApi) handleVerifyOTP(ctx *fiber.Ctx) error {
 	var (
 		resp   entities.JSON
 		status int
-		code   entities.OTP
-		token  = ctx.Get("Authorization")
+		code   struct {
+			VerificationCode string `json:"verificationCode"`
+		}
+		token = ctx.Get("Authorization")
 	)
 	err := ctx.BodyParser(&code)
 	if err != nil || len(token) == 0 {
