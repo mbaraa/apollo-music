@@ -38,20 +38,18 @@ func (p *PasswordResetHelper) ResetPassword(email string) (entities.JSON, int) {
 
 	passwordResetToken, err := p.jwtUtil.Sign(entities.JSON{
 		"email": email,
-	}, jwt.PasswordRestToken, time.Now().UTC().Add(time.Minute*5))
+	}, jwt.PasswordRestToken, time.Now().UTC().Add(time.Minute*30))
 	if err != nil {
 		return response.Build(errors.InternalServerError, nil)
 	}
 
-	passwordResetLink := fmt.Sprintf("%s/password-reset", env.FrontendAddress())
+	passwordResetLink := fmt.Sprintf("%s/password-reset/%s", env.FrontendAddress(), passwordResetToken)
 	err = mailer.SendPasswordReset(passwordResetLink, dbUser[0].Email)
 	if err != nil {
 		return response.Build(errors.InternalServerError, nil)
 	}
 
-	return response.Build(errors.None, entities.JSON{
-		"token": passwordResetToken,
-	})
+	return response.Build(errors.None, nil)
 }
 
 func (p *PasswordResetHelper) UpdatePassword(token, newPassword string) (entities.JSON, int) {

@@ -53,7 +53,7 @@ func (e *EmailHelper) SigninUser(user entities.User) (entities.JSON, int) {
 	sub := jwt.SessionToken
 	if dbUser[0].Status != enums.ActiveStatus {
 		sub = jwt.InactiveUserToken
-		expirationTime = time.Now().UTC().Add(time.Minute*5 + time.Second*30)
+		expirationTime = time.Now().UTC().Add(time.Minute * 30)
 	}
 	if dbUser[0].Status == enums.UnverifiedEmailStatus {
 		otp := strings.GenerateOTP()
@@ -126,7 +126,7 @@ func (e *EmailHelper) SignupUser(user entities.User) (entities.JSON, int) {
 		return response.Build(errors.InternalServerError, nil)
 	}
 
-	expirationTime := time.Now().UTC().Add(time.Minute*5 + time.Second*30)
+	expirationTime := time.Now().UTC().Add(time.Minute * 30)
 	verification := models.Verification{
 		UserId:      dbUser.Id,
 		ValidBefore: expirationTime,

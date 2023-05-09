@@ -103,7 +103,7 @@ func (o *OTPHelper) ResendOTP(token string) (entities.JSON, int) {
 	if err != nil {
 		return response.Build(errors.InternalServerError, nil)
 	}
-	expirationTime := time.Now().UTC().Add(time.Minute*5 + time.Second*30)
+	expirationTime := time.Now().UTC().Add(time.Minute * 30)
 	verification := models.Verification{
 		UserId:      dbUser[0].Id,
 		ValidBefore: expirationTime,
