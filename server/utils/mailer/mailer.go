@@ -10,8 +10,16 @@ import (
 )
 
 var (
-	templates = template.Must(template.ParseGlob("./utils/mailer/*.html"))
+	templates *template.Template
 )
+
+func init() {
+	templatesPath := "./email_templates/" // not in dev env
+	if env.Development() {
+		templatesPath = "./utils/mailer/"
+	}
+	templates = template.Must(template.ParseGlob(templatesPath + "*html"))
+}
 
 func SendOTP(otp, to string) error {
 	buf := new(strings.Builder)
