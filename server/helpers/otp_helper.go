@@ -59,7 +59,7 @@ func (o *OTPHelper) VerifyOTP(token, verificationCode string) (entities.JSON, in
 	}
 
 	err = o.userRepo.Update(&models.User{
-		Status: enums.ActiveStatus,
+		Status: enums.InactiveStatus,
 	}, "id = ?", dbUser[0].Id)
 	if err != nil {
 		return response.Build(errors.InternalServerError, nil)
@@ -103,6 +103,9 @@ func (o *OTPHelper) ResendOTP(token string) (entities.JSON, int) {
 	if err != nil {
 		return response.Build(errors.InternalServerError, nil)
 	}
+
+	_ = o.repo.Delete("user_id = ?", dbUser[0].Id)
+
 	expirationTime := time.Now().UTC().Add(time.Minute * 30)
 	verification := models.Verification{
 		UserId:      dbUser[0].Id,
@@ -119,15 +122,5 @@ func (o *OTPHelper) ResendOTP(token string) (entities.JSON, int) {
 		return response.Build(errors.InternalServerError, nil)
 	}
 
-	checkoutToken, err := o.jwtUtil.Sign(entities.JSON{
-		"email":    dbUser[0].Email,
-		"publicId": dbUser[0].PublicId,
-	}, jwt.OtpToken, expirationTime)
-	if err != nil {
-		return response.Build(errors.InternalServerError, nil)
-	}
-
-	return response.Build(errors.None, entities.JSON{
-		"token": checkoutToken,
-	})
+	return response.Build(errors.None, nil)
 }

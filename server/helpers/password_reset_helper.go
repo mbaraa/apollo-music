@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mbaraa/apollo-music/config/env"
 	"github.com/mbaraa/apollo-music/data"
 	"github.com/mbaraa/apollo-music/entities"
 	"github.com/mbaraa/apollo-music/errors"
@@ -30,7 +29,7 @@ func NewPasswordResetHelper(
 	}
 }
 
-func (p *PasswordResetHelper) ResetPassword(email string) (entities.JSON, int) {
+func (p *PasswordResetHelper) ResetPassword(email, origin string) (entities.JSON, int) {
 	dbUser, err := p.repo.GetByConds("email = ?", email)
 	if err != nil {
 		return response.Build(errors.NotFound, nil)
@@ -43,7 +42,7 @@ func (p *PasswordResetHelper) ResetPassword(email string) (entities.JSON, int) {
 		return response.Build(errors.InternalServerError, nil)
 	}
 
-	passwordResetLink := fmt.Sprintf("%s/password-reset/%s", env.FrontendAddress(), passwordResetToken)
+	passwordResetLink := fmt.Sprintf("%s/password-reset/%s", origin, passwordResetToken)
 	err = mailer.SendPasswordReset(passwordResetLink, dbUser[0].Email)
 	if err != nil {
 		return response.Build(errors.InternalServerError, nil)

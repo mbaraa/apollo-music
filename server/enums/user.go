@@ -2,7 +2,8 @@ package enums
 
 // UserStatus represents the user's current subscription status
 // where an active user is a user with a free subscription or an ongoing paid subscription
-// and an inactive user is a user with an overdue subscription by 10 days
+// an inactive user is a user with an inactive subscription or their subscription payment is overdue by 10 days
+// and an unverified email is a user that didn't verify their email via OTP
 type UserStatus string
 
 const (

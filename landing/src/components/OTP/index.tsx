@@ -27,6 +27,17 @@ export default function OTP() {
       });
   };
 
+  const resendOtp = async () => {
+    await fetch(`${import.meta.env.VITE_BACKEND_ADDRESS}/auth/otp/resend`, {
+      method: "GET",
+      headers: {
+        Authorization: localStorage.getItem("otpToken") ?? "",
+      },
+    }).catch((err) => {
+      console.error(err);
+    });
+  };
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     verifyOtp();
@@ -48,6 +59,8 @@ export default function OTP() {
         <br />
         <input type="submit" placeholder="Next" value="Next" />
       </form>
+      <br />
+      <button onClick={resendOtp}>Resend OTP</button>
     </>
   );
 }
