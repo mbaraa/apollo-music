@@ -2,6 +2,7 @@ package apis
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/mbaraa/apollo-music/config/env"
 	"github.com/mbaraa/apollo-music/entities"
 	"github.com/mbaraa/apollo-music/errors"
 	"github.com/mbaraa/apollo-music/helpers"
@@ -128,13 +129,18 @@ func (a *AuthApi) handleResetPassword(ctx *fiber.Ctx) error {
 			UserEmail string `json:"userEmail"`
 		}
 	)
+	origin := ctx.Get("Origin")
+	if len(origin) == 0 {
+		origin = env.FrontendAddress()
+	}
+
 	err := ctx.BodyParser(&body)
 	if err != nil {
 		resp, status = response.Build(errors.BadRequest, nil)
 		return ctx.Status(status).JSON(resp)
 	}
 
-	resp, status = a.passwordResetHelper.ResetPassword(body.UserEmail)
+	resp, status = a.passwordResetHelper.ResetPassword(body.UserEmail, origin)
 	return ctx.Status(status).JSON(resp)
 }
 
