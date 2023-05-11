@@ -2,11 +2,18 @@ package db
 
 import "github.com/mbaraa/apollo-music/models"
 
+// AllowedModels defines allowed models to be used in the db
+type AllowedModels interface {
+	models.User | models.Verification | models.Subscription
+	GetId() uint
+}
+
 func InitTables() {
 	if instance != nil {
 		err := instance.AutoMigrate(
 			new(models.User),
 			new(models.Verification),
+			new(models.Subscription),
 		)
 		if err != nil {
 			panic(err)

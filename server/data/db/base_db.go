@@ -3,15 +3,8 @@ package db
 import (
 	"errors"
 
-	"github.com/mbaraa/apollo-music/models"
 	"gorm.io/gorm"
 )
-
-// AllowedModels defines allowed models to be used in the db
-type AllowedModels interface {
-	models.User | models.Verification
-	GetId() uint
-}
 
 // BaseDB implements CRUDRepo for the user model
 type BaseDB[T AllowedModels] struct {
