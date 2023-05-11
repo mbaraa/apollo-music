@@ -12,6 +12,9 @@ FROM alpine:latest as run
 
 WORKDIR /app
 
+RUN mkdir email_templates
+
+COPY --from=build /app/utils/mailer/*.html ./email_templates/
 COPY --from=build /app/apollo-music ./run
 COPY --from=build /app/.env ./
 
