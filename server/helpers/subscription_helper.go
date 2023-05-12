@@ -51,6 +51,32 @@ func (s *SubscriptionHelper) StartSubscription(token, cardToken string, plan enu
 		return response.Build(errors.NotFound, nil)
 	}
 
+	// TODO
+	// handle free plan in a cleaner way
+	if plan == enums.FreePlan {
+		err = s.repo.Add(&models.Subscription{
+			UserId:               dbUser[0].Id,
+			Size:                 plan.Size(),
+			Price:                0,
+			ValidBefore:          time.Now().UTC().Add(time.Hour * 24 * 365),
+			StripeCustomerId:     "",
+			StripeSubscriptionId: "",
+		})
+		if err != nil {
+			return response.Build(errors.InternalServerError, nil)
+		}
+
+		err = s.userRepo.Update(&models.User{
+			Status: enums.ActiveStatus,
+		}, "id = ?", dbUser[0].Id)
+		if err != nil {
+			return response.Build(errors.InternalServerError, nil)
+		}
+
+		return response.Build(errors.None, nil)
+	}
+
+	// LMAO
 	customerId, err := s.createCustomer(dbUser[0])
 	if err != nil {
 		return response.Build(errors.PaymentError, nil)
@@ -142,7 +168,7 @@ func (s *SubscriptionHelper) CheckSubscription(token string) (entities.JSON, int
 	}
 
 	return response.Build(errors.None, entities.Subscription{
-		Size:        float64(dbSub[0].Size / 1024),
+		Size:        float64(dbSub[0].Size) / 1024.0,
 		Price:       float64(dbSub[0].Price) / 1000.0,
 		ValidBefore: dbSub[0].ValidBefore,
 	})

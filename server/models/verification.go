@@ -17,3 +17,8 @@ type Verification struct {
 func (v Verification) GetId() uint {
 	return v.Id
 }
+
+func (v *Verification) AfterDelete(_ *gorm.DB) error {
+	v.OTP = ""
+	return nil
+}
