@@ -4,6 +4,7 @@ import Signup from "./components/Signup";
 import OTP from "./components/OTP";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Landing from "./components/Landing";
+import Cancel from "./components/Cancel";
 
 function App() {
   const router = createBrowserRouter([
@@ -20,6 +21,7 @@ function App() {
         />
       ),
     },
+    { path: "/cancel", element: <Cancel /> },
   ]);
   return (
     <>

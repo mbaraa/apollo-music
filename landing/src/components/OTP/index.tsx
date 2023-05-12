@@ -16,9 +16,13 @@ export default function OTP() {
         Authorization: localStorage.getItem("otpToken") ?? "",
       },
     })
-      .then((resp) => resp.json())
       .then((resp) => {
-        localStorage.removeItem("otpToken");
+        if (resp.ok) {
+          localStorage.removeItem("otpToken");
+        }
+        return resp.json();
+      })
+      .then((resp) => {
         localStorage.setItem("checkoutToken", resp["data"]["token"]);
         navigate("/checkout");
       })
