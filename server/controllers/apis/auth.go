@@ -52,7 +52,7 @@ func (a *AuthApi) Bind(app *fiber.App) {
 	passwordReset.Post("/update", a.handleUpdatePassword)
 
 	session := auth.Group("/session")
-	session.Get("/verify", a.handleVerifySession)
+	session.Get("/check", a.handleCheckSession)
 }
 
 func (a *AuthApi) handleEmailSignin(ctx *fiber.Ctx) error {
@@ -163,7 +163,7 @@ func (a *AuthApi) handleUpdatePassword(ctx *fiber.Ctx) error {
 	return ctx.Status(status).JSON(resp)
 }
 
-func (a *AuthApi) handleVerifySession(ctx *fiber.Ctx) error {
+func (a *AuthApi) handleCheckSession(ctx *fiber.Ctx) error {
 	var (
 		resp   entities.JSON
 		status int
@@ -174,6 +174,6 @@ func (a *AuthApi) handleVerifySession(ctx *fiber.Ctx) error {
 		return ctx.Status(status).JSON(resp)
 	}
 
-	resp, status = a.sessionHelper.VerifySession(token)
+	resp, status = a.sessionHelper.CheckSession(token)
 	return ctx.Status(status).JSON(resp)
 }

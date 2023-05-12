@@ -5,7 +5,7 @@ export default function Cancel() {
   const sessionToken = params.get("token") ?? "";
   const cancelSubscription = async () => {
     const validSessionToken = await fetch(
-      `${import.meta.env.VITE_BACKEND_ADDRESS}/auth/session/verify`,
+      `${import.meta.env.VITE_BACKEND_ADDRESS}/auth/session/check`,
       {
         method: "GET",
         mode: "cors",

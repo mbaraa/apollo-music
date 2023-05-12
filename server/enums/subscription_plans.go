@@ -43,6 +43,6 @@ var planSize = map[Plan]int64{
 
 var planStripeProductId = map[Plan]string{
 	FreePlan:       "",
-	TwentyGBsPlan:  "",
-	HundredGBsPlan: "",
+	TwentyGBsPlan:  "price_1N5bspGl8kicHnklxKScDP9H",
+	HundredGBsPlan: "price_1N5btBGl8kicHnkltJpi2Ujg",
 }

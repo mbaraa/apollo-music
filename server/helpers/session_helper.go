@@ -24,7 +24,7 @@ func NewSessionHelper(
 	}
 }
 
-func (s *SessionHelper) VerifySession(token string) (entities.JSON, int) {
+func (s *SessionHelper) CheckSession(token string) (entities.JSON, int) {
 	claims, err := s.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
 		return response.Build(errors.InvalidToken, nil)
