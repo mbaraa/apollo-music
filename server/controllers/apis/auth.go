@@ -52,7 +52,7 @@ func (a *AuthApi) Bind(app *fiber.App) {
 	passwordReset.Post("/update", a.handleUpdatePassword)
 
 	session := auth.Group("/session")
-	session.Post("/verify", a.handleVerifySession)
+	session.Get("/verify", a.handleVerifySession)
 }
 
 func (a *AuthApi) handleEmailSignin(ctx *fiber.Ctx) error {
