@@ -13,6 +13,9 @@ var bindables []Bindable = []Bindable{
 		helpers.NewPasswordResetHelper(config.UserRepo(), config.JWTUtil()),
 		helpers.NewSessionHelper(config.UserRepo(), config.JWTUtil()),
 	),
+	apis.NewSubscriptionApi(
+		helpers.NewSubscriptionHelper(config.SubscriptionRepo(), config.UserRepo(), config.JWTUtil()),
+	),
 }
 
 func GetControllers() []Bindable {

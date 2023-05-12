@@ -12,6 +12,7 @@ var (
 	dbConnection     = db.GetDBConnector()
 	userRepo         data.CRUDRepo[models.User]
 	verificationRepo data.CRUDRepo[models.Verification]
+	subscriptionRepo data.CRUDRepo[models.Subscription]
 )
 
 var (
@@ -22,6 +23,7 @@ func init() {
 	db.InitTables()
 	userRepo = db.NewBaseDB[models.User](dbConnection)
 	verificationRepo = db.NewBaseDB[models.Verification](dbConnection)
+	subscriptionRepo = db.NewBaseDB[models.Subscription](dbConnection)
 	jwtUtil = jwt.NewJWTImpl()
 }
 
@@ -31,6 +33,10 @@ func UserRepo() data.CRUDRepo[models.User] {
 
 func VerificationRepo() data.CRUDRepo[models.Verification] {
 	return verificationRepo
+}
+
+func SubscriptionRepo() data.CRUDRepo[models.Subscription] {
+	return subscriptionRepo
 }
 
 func JWTUtil() jwt.Manager[entities.JSON] {

@@ -20,5 +20,7 @@ var (
 	ErrInvalidOAuthToken     = ErrorsNS.NewType(InvalidOAuthToken.String())
 	ErrInvalidOTP            = ErrorsNS.NewType(InvalidOTP.String())
 	ErrInvalidToken          = ErrorsNS.NewType(InvalidToken.String())
+	ErrInvalidCredentials    = ErrorsNS.NewType(InvalidCredentials.String())
 	ErrInsufficientFunds     = ErrorsNS.NewType(InsufficientFunds.String())
+	ErrPaymentError          = ErrorsNS.NewType(PaymentError.String())
 )
