@@ -22,7 +22,9 @@ var bindables []Bindable = []Bindable{
 		helpers.NewStorageHelper(config.StorageRepo(), config.UserRepo(), config.JWTUtil()),
 	),
 	apis.NewUploadApi(
-		helpers.NewUploadHelper(config.StorageRepo(), config.UserRepo(), config.JWTUtil()),
+		helpers.NewUploadHelper(config.StorageRepo(), config.UserRepo(), config.MusicRepo(),
+			config.AlbumRepo(), config.ArtistRepo(), config.YearRepo(), config.GenreRepo(),
+			config.JWTUtil()),
 	),
 }
 

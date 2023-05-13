@@ -5,7 +5,8 @@ import "github.com/mbaraa/apollo-music/models"
 // AllowedModels defines allowed models to be used in the db
 type AllowedModels interface {
 	models.User | models.Verification | models.Subscription |
-		models.Storage
+		models.Storage | models.Audio | models.Music | models.MusicAlbum |
+		models.MusicArtist | models.MusicReleaseYear | models.MusicGenre
 	GetId() uint
 }
 
@@ -16,6 +17,12 @@ func InitTables() {
 			new(models.Verification),
 			new(models.Subscription),
 			new(models.Storage),
+			new(models.Audio),
+			new(models.Music),
+			new(models.MusicAlbum),
+			new(models.MusicArtist),
+			new(models.MusicReleaseYear),
+			new(models.MusicGenre),
 		)
 		if err != nil {
 			panic(err)

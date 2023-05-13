@@ -15,6 +15,7 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
+	github.com/dhowden/tag v0.0.0-20220618230019-adf36e896086 // indirect
 	github.com/fasthttp/websocket v1.5.2 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
