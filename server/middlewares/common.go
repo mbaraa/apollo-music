@@ -6,10 +6,17 @@ import (
 	"github.com/mbaraa/apollo-music/config/env"
 )
 
-// AllowJSON sets content type of both the request and response to application/json
 func AllowJSON(c *fiber.Ctx) error {
 	c.Request().Header.Set("Content-Type", "application/json")
 	c.Set("Content-Type", "application/json")
+	return c.Next()
+}
+
+func AllowMultipartForm(c *fiber.Ctx) error {
+	c.Request().Header.Set("Accept", "multipart/form-data")
+	c.Request().Header.Set("Content-Type", "multipart/form-data")
+	c.Set("Content-Type", "multipart/form-data")
+
 	return c.Next()
 }
 

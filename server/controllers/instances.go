@@ -21,6 +21,9 @@ var bindables []Bindable = []Bindable{
 	apis.NewStorageApi(
 		helpers.NewStorageHelper(config.StorageRepo(), config.UserRepo(), config.JWTUtil()),
 	),
+	apis.NewUploadApi(
+		helpers.NewUploadHelper(config.StorageRepo(), config.UserRepo(), config.JWTUtil()),
+	),
 }
 
 func GetControllers() []Bindable {
