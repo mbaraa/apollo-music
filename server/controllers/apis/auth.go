@@ -5,23 +5,23 @@ import (
 	"github.com/mbaraa/apollo-music/config/env"
 	"github.com/mbaraa/apollo-music/entities"
 	"github.com/mbaraa/apollo-music/errors"
-	"github.com/mbaraa/apollo-music/helpers"
+	"github.com/mbaraa/apollo-music/helpers/auth"
 	"github.com/mbaraa/apollo-music/helpers/response"
 	"github.com/mbaraa/apollo-music/middlewares"
 )
 
 type AuthApi struct {
-	helper              *helpers.EmailHelper
-	otpHelper           *helpers.OTPHelper
-	passwordResetHelper *helpers.PasswordResetHelper
-	sessionHelper       *helpers.SessionHelper
+	helper              *auth.EmailHelper
+	otpHelper           *auth.OTPHelper
+	passwordResetHelper *auth.PasswordResetHelper
+	sessionHelper       *auth.SessionHelper
 }
 
 func NewAuthApi(
-	helper *helpers.EmailHelper,
-	otpHelper *helpers.OTPHelper,
-	passwordResetHelper *helpers.PasswordResetHelper,
-	sessionHelper *helpers.SessionHelper,
+	helper *auth.EmailHelper,
+	otpHelper *auth.OTPHelper,
+	passwordResetHelper *auth.PasswordResetHelper,
+	sessionHelper *auth.SessionHelper,
 ) *AuthApi {
 	return &AuthApi{
 		helper:              helper,
