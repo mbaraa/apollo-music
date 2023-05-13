@@ -10,6 +10,7 @@ import (
 type Audio struct {
 	gorm.Model  `json:"-"`
 	Id          uint            `gorm:"primaryKey;autoIncrement" json:"-"`
+	UserId      uint            `json:"-"`
 	FileName    string          `json:"-"`
 	FileSize    int64           `json:"-"`
 	AccessTimes uint            `json:"-"`

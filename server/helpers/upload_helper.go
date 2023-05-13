@@ -180,6 +180,7 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		}
 
 		_dbMusic := models.Music{
+			UserId:     dbUser[0].Id,
 			Title:      title,
 			AlbumTitle: album,
 			AlbumId:    _dbAlbum.Id,

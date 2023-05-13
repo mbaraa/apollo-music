@@ -27,6 +27,9 @@ var bindables []Bindable = []Bindable{
 			config.AlbumRepo(), config.ArtistRepo(), config.YearRepo(), config.GenreRepo(),
 			config.JWTUtil()),
 	),
+	apis.NewLibraryApi(
+		helpers.NewLibraryHelper(config.MusicRepo(), config.UserRepo(), config.JWTUtil()),
+	),
 }
 
 func GetControllers() []Bindable {

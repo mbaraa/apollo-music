@@ -42,7 +42,7 @@ func Build(errCode errors.ErrorCode, data any) (entities.JSON, int) {
 
 	if data != nil {
 		dataKind := reflect.TypeOf(data).Kind()
-		if dataKind == reflect.Struct || dataKind == reflect.Map {
+		if dataKind == reflect.Struct || dataKind == reflect.Map || dataKind == reflect.Slice {
 			resp["data"] = data
 		}
 	}

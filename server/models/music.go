@@ -8,6 +8,7 @@ import (
 type Music struct {
 	gorm.Model `json:"-"`
 	Id         uint   `gorm:"primaryKey;autoIncrement" json:"-"`
+	UserId     uint   `json:"-"`
 	PublicId   string `json:"-"`
 	Title      string `json:"-"`
 	Audio      Audio  `gorm:"foreignKey:AudioId" json:"-"`
@@ -31,9 +32,14 @@ func (m *Music) BeforeCreate(_ *gorm.DB) error {
 	return nil
 }
 
+func (m *Music) AfterFind(db *gorm.DB) error {
+	return db.Find(&m.Audio, "id = ?", m.AudioId).Error
+}
+
 type MusicAlbum struct {
 	gorm.Model `json:"-"`
 	Id         uint   `gorm:"primaryKey;autoIncrement" json:"-"`
+	UserId     uint   `json:"-"`
 	PublicId   string `json:"-"`
 	Title      string `json:"-"`
 	ArtistName string `json:"-"`
@@ -56,6 +62,7 @@ func (a *MusicAlbum) BeforeCreate(_ *gorm.DB) error {
 type MusicArtist struct {
 	gorm.Model `json:"-"`
 	Id         uint   `gorm:"primaryKey;autoIncrement" json:"-"`
+	UserId     uint   `json:"-"`
 	PublicId   string `json:"-"`
 	Name       string `json:"-"`
 }
@@ -72,6 +79,7 @@ func (a *MusicArtist) BeforeCreate(_ *gorm.DB) error {
 type MusicReleaseYear struct {
 	gorm.Model `json:"-"`
 	Id         uint   `gorm:"primaryKey;autoIncrement" json:"-"`
+	UserId     uint   `json:"-"`
 	PublicId   string `json:"-"`
 	Name       string `json:"-"`
 }
@@ -88,6 +96,7 @@ func (y *MusicReleaseYear) BeforeCreate(_ *gorm.DB) error {
 type MusicGenre struct {
 	gorm.Model `json:"-"`
 	Id         uint   `gorm:"primaryKey;autoIncrement" json:"-"`
+	UserId     uint   `json:"-"`
 	PublicId   string `json:"-"`
 	Name       string `json:"-"`
 }
