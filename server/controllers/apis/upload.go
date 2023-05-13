@@ -1,6 +1,8 @@
 package apis
 
 import (
+	"net/http"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/mbaraa/apollo-music/entities"
 	"github.com/mbaraa/apollo-music/enums"
@@ -26,6 +28,7 @@ func (u *UploadApi) Bind(app *fiber.App) {
 	upload.Use(middlewares.AllowMultipartForm)
 
 	upload.Post("/file/:audioType", u.handleUploadFile)
+	upload.Post("/directory/:audioType", u.handleUploadDirectory)
 }
 
 func (u *UploadApi) handleUploadFile(ctx *fiber.Ctx) error {
@@ -42,5 +45,27 @@ func (u *UploadApi) handleUploadFile(ctx *fiber.Ctx) error {
 	}
 
 	resp, status = u.helper.UploadFile(token, audioType, fileHeader)
+	return ctx.Status(status).JSON(resp)
+}
+
+func (u *UploadApi) handleUploadDirectory(ctx *fiber.Ctx) error {
+	var (
+		token     = ctx.Get("Authorization")
+		audioType = enums.GetAudioType(ctx.Params("audioType"))
+		resp      entities.JSON
+		status    int
+	)
+	files, err := ctx.MultipartForm()
+	if len(token) == 0 || err != nil {
+		resp, status = response.Build(errors.BadRequest, nil)
+		return ctx.Status(status).JSON(resp)
+	}
+
+	for _, fileHeader := range files.File["audioFile"] {
+		resp, status = u.helper.UploadFile(token, audioType, fileHeader)
+		if status != http.StatusOK {
+			break
+		}
+	}
 	return ctx.Status(status).JSON(resp)
 }
