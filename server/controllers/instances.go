@@ -14,7 +14,12 @@ var bindables []Bindable = []Bindable{
 		helpers.NewSessionHelper(config.UserRepo(), config.JWTUtil()),
 	),
 	apis.NewSubscriptionApi(
-		helpers.NewSubscriptionHelper(config.SubscriptionRepo(), config.UserRepo(), config.JWTUtil()),
+		helpers.NewSubscriptionHelper(config.SubscriptionRepo(), config.UserRepo(),
+			helpers.NewStorageHelper(config.StorageRepo(), config.UserRepo(), config.JWTUtil()),
+			config.JWTUtil()),
+	),
+	apis.NewStorageApi(
+		helpers.NewStorageHelper(config.StorageRepo(), config.UserRepo(), config.JWTUtil()),
 	),
 }
 

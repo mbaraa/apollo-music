@@ -18,22 +18,25 @@ import (
 )
 
 type SubscriptionHelper struct {
-	repo     data.CRUDRepo[models.Subscription]
-	userRepo data.CRUDRepo[models.User]
-	jwtUtil  jwt.Manager[entities.JSON]
+	repo          data.CRUDRepo[models.Subscription]
+	userRepo      data.CRUDRepo[models.User]
+	storageHelper *StorageHelper
+	jwtUtil       jwt.Manager[entities.JSON]
 }
 
 func NewSubscriptionHelper(
 	repo data.CRUDRepo[models.Subscription],
 	userRepo data.CRUDRepo[models.User],
+	storageHelper *StorageHelper,
 	jwtUtil jwt.Manager[entities.JSON],
 ) *SubscriptionHelper {
 	stripe.Key = env.StripeSecretKey()
 
 	return &SubscriptionHelper{
-		repo:     repo,
-		userRepo: userRepo,
-		jwtUtil:  jwtUtil,
+		repo:          repo,
+		userRepo:      userRepo,
+		storageHelper: storageHelper,
+		jwtUtil:       jwtUtil,
 	}
 }
 
@@ -49,6 +52,11 @@ func (s *SubscriptionHelper) StartSubscription(token, cardToken string, plan enu
 	dbUser, err := s.userRepo.GetByConds("email = ?", claims.Payload["email"])
 	if err != nil {
 		return response.Build(errors.NotFound, nil)
+	}
+
+	s.storageHelper.createStorage(plan.Size(), dbUser[0])
+	if err != nil {
+		return response.Build(errors.InternalServerError, nil)
 	}
 
 	// TODO
@@ -132,6 +140,11 @@ func (s *SubscriptionHelper) CancelSubscription(token string) (entities.JSON, in
 
 	params := &stripe.SubscriptionParams{CancelAtPeriodEnd: stripe.Bool(true)}
 	_, err = subscription.Update(dbSub[0].StripeSubscriptionId, params)
+	if err != nil {
+		return response.Build(errors.InternalServerError, nil)
+	}
+
+	s.storageHelper.destroyStorage(dbUser[0])
 	if err != nil {
 		return response.Build(errors.InternalServerError, nil)
 	}

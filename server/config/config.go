@@ -13,6 +13,7 @@ var (
 	userRepo         data.CRUDRepo[models.User]
 	verificationRepo data.CRUDRepo[models.Verification]
 	subscriptionRepo data.CRUDRepo[models.Subscription]
+	storageRepo      data.CRUDRepo[models.Storage]
 )
 
 var (
@@ -24,6 +25,7 @@ func init() {
 	userRepo = db.NewBaseDB[models.User](dbConnection)
 	verificationRepo = db.NewBaseDB[models.Verification](dbConnection)
 	subscriptionRepo = db.NewBaseDB[models.Subscription](dbConnection)
+	storageRepo = db.NewBaseDB[models.Storage](dbConnection)
 	jwtUtil = jwt.NewJWTImpl()
 }
 
@@ -37,6 +39,10 @@ func VerificationRepo() data.CRUDRepo[models.Verification] {
 
 func SubscriptionRepo() data.CRUDRepo[models.Subscription] {
 	return subscriptionRepo
+}
+
+func StorageRepo() data.CRUDRepo[models.Storage] {
+	return storageRepo
 }
 
 func JWTUtil() jwt.Manager[entities.JSON] {
