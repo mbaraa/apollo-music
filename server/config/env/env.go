@@ -3,6 +3,7 @@ package env
 import (
 	"net"
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
@@ -34,6 +35,13 @@ func MailerFrom() string         { return os.Getenv("MAILER_FROM") }
 func MailerPassword() string     { return os.Getenv("MAILER_PASSWORD") }
 func FrontendAddress() string    { return os.Getenv("FRONTEND_ADDRESS") }
 func StripeSecretKey() string    { return os.Getenv("STRIPE_SK") }
+func MaxSingleFileSize() int {
+	intSize, err := strconv.Atoi(os.Getenv("MAX_SINGLE_FILE_SIZE"))
+	if err != nil {
+		intSize = 20 * 1024 * 1024
+	}
+	return intSize
+}
 
 func getMachineIP() string {
 	conn, err := net.Dial("udp", "8.8.8.8:"+PortNumber())

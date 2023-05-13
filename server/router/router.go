@@ -18,7 +18,8 @@ func Start() {
 
 func init() {
 	server = fiber.New(fiber.Config{
-		AppName: "Apollo Music",
+		AppName:   "Apollo Music",
+		BodyLimit: env.MaxSingleFileSize(),
 	})
 
 	for _, controller := range controllers.GetControllers() {
