@@ -174,3 +174,255 @@ func (m *LibraryHelper) GetAlbums(token string) (entities.JSON, int) {
 
 	return response.Build(errors.None, albums)
 }
+
+func (m *LibraryHelper) GetArtist(token, artistPublicId string) (entities.JSON, int) {
+	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
+	if err != nil {
+		return response.Build(errors.InvalidToken, nil)
+	}
+
+	dbUser, err := m.userRepo.GetByConds("email = ?", claims.Payload["email"])
+	if err != nil {
+		return response.Build(errors.NotFound, nil)
+	}
+
+	dbArtist, err := m.artistRepo.GetByConds("public_id = ?", artistPublicId)
+	if err != nil {
+		return response.Build(errors.NotFound, nil)
+	}
+
+	dbMusic, err := m.musicRepo.GetByConds("user_id = ? and artist_id = ?", dbUser[0].Id, dbArtist[0].Id)
+	if err != nil {
+		return response.Build(errors.NotFound, nil)
+	}
+
+	music := make([]entities.Music, 0)
+	for _, m := range dbMusic {
+		music = append(music, entities.Music{
+			PublicId:    m.PublicId,
+			Title:       m.Title,
+			AlbumTitle:  m.AlbumTitle,
+			ArtistName:  m.ArtistName,
+			Year:        m.Year,
+			Genre:       m.Genre,
+			TrackNumber: m.TrackNumber,
+			Audio: entities.Audio{
+				FileName:    m.Audio.FileName,
+				FileSize:    float64(m.Audio.FileSize),
+				LastAccess:  m.Audio.LastAccess,
+				AccessTimes: m.Audio.AccessTimes,
+				PublicPath:  m.Audio.PublicPath,
+				Type:        m.Audio.Type,
+			},
+		})
+	}
+
+	sort.Slice(music, func(i, j int) bool {
+		return music[i].Title < music[j].Title
+	})
+
+	return response.Build(errors.None, entities.MusicArtist{
+		PublicId: dbArtist[0].PublicId,
+		Name:     dbArtist[0].Name,
+		Songs:    music,
+	})
+}
+
+func (m *LibraryHelper) GetArtists(token string) (entities.JSON, int) {
+	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
+	if err != nil {
+		return response.Build(errors.InvalidToken, nil)
+	}
+
+	dbUser, err := m.userRepo.GetByConds("email = ?", claims.Payload["email"])
+	if err != nil {
+		return response.Build(errors.NotFound, nil)
+	}
+
+	dbArtists, err := m.artistRepo.GetByConds("user_id = ?", dbUser[0].Id)
+	if err != nil {
+		return response.Build(errors.NotFound, nil)
+	}
+
+	artists := make([]entities.MusicArtist, 0)
+	for _, artist := range dbArtists {
+		artists = append(artists, entities.MusicArtist{
+			PublicId: artist.PublicId,
+			Name:     artist.Name,
+		})
+	}
+
+	sort.Slice(artists, func(i, j int) bool {
+		return artists[i].Name < artists[j].Name
+	})
+
+	return response.Build(errors.None, artists)
+}
+
+func (m *LibraryHelper) GetYear(token, yearPublicId string) (entities.JSON, int) {
+	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
+	if err != nil {
+		return response.Build(errors.InvalidToken, nil)
+	}
+
+	dbUser, err := m.userRepo.GetByConds("email = ?", claims.Payload["email"])
+	if err != nil {
+		return response.Build(errors.NotFound, nil)
+	}
+
+	dbYear, err := m.yearRepo.GetByConds("public_id = ?", yearPublicId)
+	if err != nil {
+		return response.Build(errors.NotFound, nil)
+	}
+
+	dbMusic, err := m.musicRepo.GetByConds("user_id = ? and year_id = ?", dbUser[0].Id, dbYear[0].Id)
+	if err != nil {
+		return response.Build(errors.NotFound, nil)
+	}
+
+	music := make([]entities.Music, 0)
+	for _, m := range dbMusic {
+		music = append(music, entities.Music{
+			PublicId:    m.PublicId,
+			Title:       m.Title,
+			AlbumTitle:  m.AlbumTitle,
+			ArtistName:  m.ArtistName,
+			Year:        m.Year,
+			Genre:       m.Genre,
+			TrackNumber: m.TrackNumber,
+			Audio: entities.Audio{
+				FileName:    m.Audio.FileName,
+				FileSize:    float64(m.Audio.FileSize),
+				LastAccess:  m.Audio.LastAccess,
+				AccessTimes: m.Audio.AccessTimes,
+				PublicPath:  m.Audio.PublicPath,
+				Type:        m.Audio.Type,
+			},
+		})
+	}
+
+	sort.Slice(music, func(i, j int) bool {
+		return music[i].Title < music[j].Title
+	})
+
+	return response.Build(errors.None, entities.MusicReleaseYear{
+		PublicId: dbYear[0].PublicId,
+		Name:     dbYear[0].Name,
+		Songs:    music,
+	})
+}
+
+func (m *LibraryHelper) GetYears(token string) (entities.JSON, int) {
+	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
+	if err != nil {
+		return response.Build(errors.InvalidToken, nil)
+	}
+
+	dbUser, err := m.userRepo.GetByConds("email = ?", claims.Payload["email"])
+	if err != nil {
+		return response.Build(errors.NotFound, nil)
+	}
+
+	dbYears, err := m.yearRepo.GetByConds("user_id = ?", dbUser[0].Id)
+	if err != nil {
+		return response.Build(errors.NotFound, nil)
+	}
+
+	years := make([]entities.MusicReleaseYear, 0)
+	for _, year := range dbYears {
+		years = append(years, entities.MusicReleaseYear{
+			PublicId: year.PublicId,
+			Name:     year.Name,
+		})
+	}
+
+	sort.Slice(years, func(i, j int) bool {
+		return years[i].Name < years[j].Name
+	})
+
+	return response.Build(errors.None, years)
+}
+
+func (m *LibraryHelper) GetGenre(token, genrePublicId string) (entities.JSON, int) {
+	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
+	if err != nil {
+		return response.Build(errors.InvalidToken, nil)
+	}
+
+	dbUser, err := m.userRepo.GetByConds("email = ?", claims.Payload["email"])
+	if err != nil {
+		return response.Build(errors.NotFound, nil)
+	}
+
+	dbGenre, err := m.genreRepo.GetByConds("public_id = ?", genrePublicId)
+	if err != nil {
+		return response.Build(errors.NotFound, nil)
+	}
+
+	dbMusic, err := m.musicRepo.GetByConds("user_id = ? and genre_id = ?", dbUser[0].Id, dbGenre[0].Id)
+	if err != nil {
+		return response.Build(errors.NotFound, nil)
+	}
+
+	music := make([]entities.Music, 0)
+	for _, m := range dbMusic {
+		music = append(music, entities.Music{
+			PublicId:    m.PublicId,
+			Title:       m.Title,
+			AlbumTitle:  m.AlbumTitle,
+			ArtistName:  m.ArtistName,
+			Year:        m.Year,
+			Genre:       m.Genre,
+			TrackNumber: m.TrackNumber,
+			Audio: entities.Audio{
+				FileName:    m.Audio.FileName,
+				FileSize:    float64(m.Audio.FileSize),
+				LastAccess:  m.Audio.LastAccess,
+				AccessTimes: m.Audio.AccessTimes,
+				PublicPath:  m.Audio.PublicPath,
+				Type:        m.Audio.Type,
+			},
+		})
+	}
+
+	sort.Slice(music, func(i, j int) bool {
+		return music[i].Title < music[j].Title
+	})
+
+	return response.Build(errors.None, entities.MusicGenre{
+		PublicId: dbGenre[0].PublicId,
+		Name:     dbGenre[0].Name,
+		Songs:    music,
+	})
+}
+
+func (m *LibraryHelper) GetGenres(token string) (entities.JSON, int) {
+	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
+	if err != nil {
+		return response.Build(errors.InvalidToken, nil)
+	}
+
+	dbUser, err := m.userRepo.GetByConds("email = ?", claims.Payload["email"])
+	if err != nil {
+		return response.Build(errors.NotFound, nil)
+	}
+
+	dbGenres, err := m.genreRepo.GetByConds("user_id = ?", dbUser[0].Id)
+	if err != nil {
+		return response.Build(errors.NotFound, nil)
+	}
+
+	genres := make([]entities.MusicGenre, 0)
+	for _, genre := range dbGenres {
+		genres = append(genres, entities.MusicGenre{
+			PublicId: genre.PublicId,
+			Name:     genre.Name,
+		})
+	}
+
+	sort.Slice(genres, func(i, j int) bool {
+		return genres[i].Name < genres[j].Name
+	})
+
+	return response.Build(errors.None, genres)
+}

@@ -31,6 +31,12 @@ func (l *LibraryApi) Bind(app *fiber.App) {
 	library.Get("/music", l.handleGetMusic)
 	library.Get("/album/:publicId", l.handleGetAlbum)
 	library.Get("/albums", l.handleGetAlbums)
+	library.Get("/artist/:publicId", l.handleGetArtist)
+	library.Get("/artists", l.handleGetArtists)
+	library.Get("/year/:publicId", l.handleGetYear)
+	library.Get("/years", l.handleGetYears)
+	library.Get("/genre/:publicId", l.handleGetGenre)
+	library.Get("/genres", l.handleGetGenres)
 }
 
 func (l *LibraryApi) handleGetMusic(ctx *fiber.Ctx) error {
@@ -76,5 +82,98 @@ func (l *LibraryApi) handleGetAlbums(ctx *fiber.Ctx) error {
 	}
 
 	resp, status = l.musicHelper.GetAlbums(token)
+	return ctx.Status(status).JSON(resp)
+}
+
+func (l *LibraryApi) handleGetArtist(ctx *fiber.Ctx) error {
+	var (
+		resp              entities.JSON
+		status            int
+		token             = ctx.Get("Authorization")
+		artistPublicId, _ = url.PathUnescape(ctx.Params("publicId"))
+	)
+	if len(token) == 0 {
+		resp, status = response.Build(errors.BadRequest, nil)
+		return ctx.Status(status).JSON(resp)
+	}
+
+	resp, status = l.musicHelper.GetArtist(token, artistPublicId)
+	return ctx.Status(status).JSON(resp)
+}
+
+func (l *LibraryApi) handleGetArtists(ctx *fiber.Ctx) error {
+	var (
+		resp   entities.JSON
+		status int
+		token  = ctx.Get("Authorization")
+	)
+	if len(token) == 0 {
+		resp, status = response.Build(errors.BadRequest, nil)
+		return ctx.Status(status).JSON(resp)
+	}
+
+	resp, status = l.musicHelper.GetArtists(token)
+	return ctx.Status(status).JSON(resp)
+}
+
+func (l *LibraryApi) handleGetYear(ctx *fiber.Ctx) error {
+	var (
+		resp            entities.JSON
+		status          int
+		token           = ctx.Get("Authorization")
+		yearPublicId, _ = url.PathUnescape(ctx.Params("publicId"))
+	)
+	if len(token) == 0 {
+		resp, status = response.Build(errors.BadRequest, nil)
+		return ctx.Status(status).JSON(resp)
+	}
+
+	resp, status = l.musicHelper.GetYear(token, yearPublicId)
+	return ctx.Status(status).JSON(resp)
+}
+
+func (l *LibraryApi) handleGetYears(ctx *fiber.Ctx) error {
+	var (
+		resp   entities.JSON
+		status int
+		token  = ctx.Get("Authorization")
+	)
+	if len(token) == 0 {
+		resp, status = response.Build(errors.BadRequest, nil)
+		return ctx.Status(status).JSON(resp)
+	}
+
+	resp, status = l.musicHelper.GetYears(token)
+	return ctx.Status(status).JSON(resp)
+}
+
+func (l *LibraryApi) handleGetGenre(ctx *fiber.Ctx) error {
+	var (
+		resp             entities.JSON
+		status           int
+		token            = ctx.Get("Authorization")
+		genrePublicId, _ = url.PathUnescape(ctx.Params("publicId"))
+	)
+	if len(token) == 0 {
+		resp, status = response.Build(errors.BadRequest, nil)
+		return ctx.Status(status).JSON(resp)
+	}
+
+	resp, status = l.musicHelper.GetGenre(token, genrePublicId)
+	return ctx.Status(status).JSON(resp)
+}
+
+func (l *LibraryApi) handleGetGenres(ctx *fiber.Ctx) error {
+	var (
+		resp   entities.JSON
+		status int
+		token  = ctx.Get("Authorization")
+	)
+	if len(token) == 0 {
+		resp, status = response.Build(errors.BadRequest, nil)
+		return ctx.Status(status).JSON(resp)
+	}
+
+	resp, status = l.musicHelper.GetGenres(token)
 	return ctx.Status(status).JSON(resp)
 }
