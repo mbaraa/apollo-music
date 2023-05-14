@@ -1,5 +1,5 @@
 const config: { [keys: string]: string } = {
-	backendAddress: "http://localhost:1214",
+	backendAddress: import.meta.env.VITE_BACKEND_ADDRESS,
 	defaultLocale: "en"
 };
 

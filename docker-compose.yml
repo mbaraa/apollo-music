@@ -47,6 +47,7 @@ services:
     restart: "always"
     ports:
       - "1412:3000"
+    env_file: ./client/.env
     stdin_open: true
 
   apollo-music-client-landing:

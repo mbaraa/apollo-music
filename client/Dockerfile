@@ -14,6 +14,7 @@ WORKDIR /app
 
 COPY --from=build /app ./
 COPY --from=build /app/build ./
+COPY --from=build /app/.env ./
 
 EXPOSE 3000
 CMD ["node", "./index.js"]
