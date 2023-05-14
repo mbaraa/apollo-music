@@ -54,7 +54,7 @@ func checkCondsMeaning(conds ...any) bool {
 			uint, uint8, uint16, uint32, uint64,
 			float32, float64,
 			complex64, complex128,
-			string:
+			string, []uint:
 			ok = true
 		default:
 			return false
