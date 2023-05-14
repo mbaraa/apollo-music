@@ -118,16 +118,23 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		album := musicMetaData.Album()
 		year := musicMetaData.Year()
 		genre := musicMetaData.Genre()
-		artist := musicMetaData.AlbumArtist()
+		artist := musicMetaData.Artist()
+		if len(artist) == 0 {
+			artist = musicMetaData.AlbumArtist()
+		}
+		trackNumer, _ := musicMetaData.Track()
 
 		_dbArtist := models.MusicArtist{
-			Name: artist,
+			Name:   artist,
+			UserId: dbUser[0].Id,
 		}
 		_dbYear := models.MusicReleaseYear{
-			Name: fmt.Sprint(year),
+			Name:   fmt.Sprint(year),
+			UserId: dbUser[0].Id,
 		}
 		_dbGenre := models.MusicGenre{
-			Name: genre,
+			Name:   genre,
+			UserId: dbUser[0].Id,
 		}
 
 		dbArtist, err := u.artistRepo.GetByConds("name = ?", artist)
@@ -161,6 +168,7 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		}
 
 		_dbAlbum := models.MusicAlbum{
+			UserId:     dbUser[0].Id,
 			Title:      album,
 			ArtistName: artist,
 			ArtistId:   _dbArtist.Id,
@@ -180,16 +188,17 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		}
 
 		_dbMusic := models.Music{
-			UserId:     dbUser[0].Id,
-			Title:      title,
-			AlbumTitle: album,
-			AlbumId:    _dbAlbum.Id,
-			ArtistName: artist,
-			ArtistId:   _dbArtist.Id,
-			Year:       fmt.Sprint(year),
-			YearId:     _dbYear.Id,
-			Genre:      genre,
-			GenreId:    _dbGenre.Id,
+			UserId:      dbUser[0].Id,
+			Title:       title,
+			AlbumTitle:  album,
+			AlbumId:     _dbAlbum.Id,
+			ArtistName:  artist,
+			ArtistId:    _dbArtist.Id,
+			Year:        fmt.Sprint(year),
+			YearId:      _dbYear.Id,
+			Genre:       genre,
+			GenreId:     _dbGenre.Id,
+			TrackNumber: trackNumer,
 			Audio: models.Audio{
 				FileName:    fileHeader.Filename,
 				FileSize:    fileHeader.Size / (1024 * 1024),

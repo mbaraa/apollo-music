@@ -6,21 +6,22 @@ import (
 )
 
 type Music struct {
-	gorm.Model `json:"-"`
-	Id         uint   `gorm:"primaryKey;autoIncrement" json:"-"`
-	UserId     uint   `json:"-"`
-	PublicId   string `json:"-"`
-	Title      string `json:"-"`
-	Audio      Audio  `gorm:"foreignKey:AudioId" json:"-"`
-	AudioId    uint   `json:"-"`
-	AlbumTitle string `json:"-"`
-	AlbumId    uint   `json:"-"`
-	ArtistName string `json:"-"`
-	ArtistId   uint   `json:"-"`
-	Year       string `json:"-"`
-	YearId     uint   `json:"-"`
-	Genre      string `json:"-"`
-	GenreId    uint   `json:"-"`
+	gorm.Model  `json:"-"`
+	Id          uint   `gorm:"primaryKey;autoIncrement" json:"-"`
+	UserId      uint   `json:"-"`
+	PublicId    string `json:"-"`
+	Title       string `json:"-"`
+	Audio       Audio  `gorm:"foreignKey:AudioId" json:"-"`
+	AudioId     uint   `json:"-"`
+	AlbumTitle  string `json:"-"`
+	AlbumId     uint   `json:"-"`
+	ArtistName  string `json:"-"`
+	ArtistId    uint   `json:"-"`
+	Year        string `json:"-"`
+	YearId      uint   `json:"-"`
+	Genre       string `json:"-"`
+	GenreId     uint   `json:"-"`
+	TrackNumber int    `json:"-"`
 }
 
 func (m Music) GetId() uint {

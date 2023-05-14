@@ -28,7 +28,8 @@ var bindables []Bindable = []Bindable{
 			config.JWTUtil()),
 	),
 	apis.NewLibraryApi(
-		helpers.NewLibraryHelper(config.MusicRepo(), config.UserRepo(), config.JWTUtil()),
+		helpers.NewLibraryHelper(config.MusicRepo(), config.AlbumRepo(), config.ArtistRepo(),
+			config.YearRepo(), config.GenreRepo(), config.UserRepo(), config.JWTUtil()),
 	),
 }
 
