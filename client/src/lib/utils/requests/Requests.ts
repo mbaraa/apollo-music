@@ -8,9 +8,10 @@ export default class Requests {
 		action: string,
 		body: any,
 		params: any = {},
-		headers: HeadersInit = {}
+		headers: HeadersInit = {},
+		bodySerializer: any = JSON.stringify
 	): Promise<any> {
-		return this._makeRequest(method, action, params, headers, body);
+		return this._makeRequest(method, action, params, headers, body, bodySerializer);
 	}
 
 	static async makeAuthRequest(
@@ -18,7 +19,8 @@ export default class Requests {
 		action: string,
 		body: any,
 		params: any = {},
-		headers: HeadersInit = {}
+		headers: HeadersInit = {},
+		bodySerializer: any = JSON.stringify
 	): Promise<any> {
 		return this._makeRequest(
 			method,
@@ -28,7 +30,8 @@ export default class Requests {
 				Authorization: localStorage.getItem("token") as string,
 				...headers
 			},
-			body
+			body,
+			bodySerializer
 		);
 	}
 
@@ -37,13 +40,14 @@ export default class Requests {
 		action: string,
 		params: any,
 		headers: HeadersInit,
-		body: any
+		body: any,
+		bodySerializer: any
 	): Promise<any> {
 		return fetch(`${config["backendAddress"]}/${action}?${this.parseParams(params)}`, {
 			method: method,
 			mode: "cors",
 			headers: headers,
-			body: body ? JSON.stringify(body) : null
+			body: body ? bodySerializer(body) : null
 		});
 	}
 
