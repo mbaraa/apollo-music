@@ -4,6 +4,7 @@ import (
 	goerrors "errors"
 	"fmt"
 	"io"
+	"log"
 	"mime/multipart"
 	"os"
 	"strings"
@@ -59,6 +60,7 @@ func NewUploadHelper(
 func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileHeader *multipart.FileHeader) (entities.JSON, int) {
 	claims, err := u.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
@@ -68,11 +70,13 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 
 	dbUser, err := u.userRepo.GetByConds("email = ?", claims.Payload["email"])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	dbStorage, err := u.storageRepo.GetByConds("user_id = ?", dbUser[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
@@ -88,6 +92,7 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 
 	file, err := fileHeader.Open()
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.BadRequest, nil)
 	}
 	defer file.Close()
@@ -97,6 +102,7 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 
 	_, err = io.Copy(fileToSave, file)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -104,6 +110,7 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		Used: dbStorage[0].Used + fileHeader.Size/(1024*1024),
 	}, "id = ?", dbStorage[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -111,6 +118,7 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		_, _ = file.Seek(0, 0)
 		musicMetaData, err := tag.ReadFrom(file)
 		if err != nil {
+			log.Println(err)
 			return response.Build(errors.InternalServerError, nil)
 		}
 
@@ -122,7 +130,7 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		if len(artist) == 0 {
 			artist = musicMetaData.AlbumArtist()
 		}
-		trackNumer, _ := musicMetaData.Track()
+		trackNumber, _ := musicMetaData.Track()
 
 		_dbArtist := models.MusicArtist{
 			Name:   artist,
@@ -141,6 +149,7 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		if err != nil {
 			err = u.artistRepo.Add(&_dbArtist)
 			if err != nil {
+				log.Println(err)
 				return response.Build(errors.InternalServerError, nil)
 			}
 		} else {
@@ -151,6 +160,7 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		if err != nil {
 			err = u.yearRepo.Add(&_dbYear)
 			if err != nil {
+				log.Println(err)
 				return response.Build(errors.InternalServerError, nil)
 			}
 		} else {
@@ -161,6 +171,7 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		if err != nil {
 			err = u.genreRepo.Add(&_dbGenre)
 			if err != nil {
+				log.Println(err)
 				return response.Build(errors.InternalServerError, nil)
 			}
 		} else {
@@ -181,6 +192,7 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		if err != nil {
 			err = u.albumRepo.Add(&_dbAlbum)
 			if err != nil {
+				log.Println(err)
 				return response.Build(errors.InternalServerError, nil)
 			}
 		} else {
@@ -198,7 +210,7 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 			YearId:      _dbYear.Id,
 			Genre:       genre,
 			GenreId:     _dbGenre.Id,
-			TrackNumber: trackNumer,
+			TrackNumber: trackNumber,
 			Audio: models.Audio{
 				FileName:    fileHeader.Filename,
 				FileSize:    fileHeader.Size / (1024 * 1024),
@@ -212,6 +224,7 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		if err != nil {
 			err = u.musicRepo.Add(&_dbMusic)
 			if err != nil {
+				log.Println(err)
 				return response.Build(errors.InternalServerError, nil)
 			}
 		} else {

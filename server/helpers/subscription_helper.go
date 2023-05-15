@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"log"
 	"time"
 
 	"github.com/mbaraa/apollo-music/config/env"
@@ -45,17 +46,20 @@ func (s *SubscriptionHelper) StartSubscription(token, cardToken string, plan enu
 	if err != nil {
 		claims, err = s.jwtUtil.Decode(token, jwt.SessionToken)
 		if err != nil {
+			log.Println(err)
 			return response.Build(errors.InvalidToken, nil)
 		}
 	}
 
 	dbUser, err := s.userRepo.GetByConds("email = ?", claims.Payload["email"])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
-	s.storageHelper.createStorage(plan.Size(), dbUser[0])
+	err = s.storageHelper.createStorage(plan.Size(), dbUser[0])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -71,6 +75,7 @@ func (s *SubscriptionHelper) StartSubscription(token, cardToken string, plan enu
 			StripeSubscriptionId: "",
 		})
 		if err != nil {
+			log.Println(err)
 			return response.Build(errors.InternalServerError, nil)
 		}
 
@@ -78,6 +83,7 @@ func (s *SubscriptionHelper) StartSubscription(token, cardToken string, plan enu
 			Status: enums.ActiveStatus,
 		}, "id = ?", dbUser[0].Id)
 		if err != nil {
+			log.Println(err)
 			return response.Build(errors.InternalServerError, nil)
 		}
 
@@ -87,16 +93,19 @@ func (s *SubscriptionHelper) StartSubscription(token, cardToken string, plan enu
 	// LMAO
 	customerId, err := s.createCustomer(dbUser[0])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.PaymentError, nil)
 	}
 
 	_, err = s.createCard(cardToken, customerId)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.PaymentError, nil)
 	}
 
 	subscriptionId, err := s.createSubscription(customerId, plan)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InsufficientFunds, nil)
 	}
 
@@ -109,6 +118,7 @@ func (s *SubscriptionHelper) StartSubscription(token, cardToken string, plan enu
 		StripeSubscriptionId: subscriptionId,
 	})
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -116,6 +126,7 @@ func (s *SubscriptionHelper) StartSubscription(token, cardToken string, plan enu
 		Status: enums.ActiveStatus,
 	}, "id = ?", dbUser[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -125,27 +136,32 @@ func (s *SubscriptionHelper) StartSubscription(token, cardToken string, plan enu
 func (s *SubscriptionHelper) CancelSubscription(token string) (entities.JSON, int) {
 	claims, err := s.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
 	dbUser, err := s.userRepo.GetByConds("email = ?", claims.Payload["email"])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	dbSub, err := s.repo.GetByConds("user_id = ?", dbUser[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	params := &stripe.SubscriptionParams{CancelAtPeriodEnd: stripe.Bool(true)}
 	_, err = subscription.Update(dbSub[0].StripeSubscriptionId, params)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
-	s.storageHelper.destroyStorage(dbUser[0])
+	err = s.storageHelper.destroyStorage(dbUser[0])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -153,11 +169,13 @@ func (s *SubscriptionHelper) CancelSubscription(token string) (entities.JSON, in
 		Status: enums.InactiveStatus,
 	}, "id = ?", dbUser[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
 	err = s.repo.Delete("id = ?", dbSub[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -167,16 +185,19 @@ func (s *SubscriptionHelper) CancelSubscription(token string) (entities.JSON, in
 func (s *SubscriptionHelper) CheckSubscription(token string) (entities.JSON, int) {
 	claims, err := s.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
 	dbUser, err := s.userRepo.GetByConds("email = ?", claims.Payload["email"])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	dbSub, err := s.repo.GetByConds("user_id = ?", dbUser[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
@@ -195,6 +216,7 @@ func (s *SubscriptionHelper) createCustomer(user models.User) (customerId string
 	}
 	cus, err := customer.New(params)
 	if err != nil {
+		log.Println(err)
 		return "", err
 	}
 
@@ -208,6 +230,7 @@ func (s *SubscriptionHelper) createCard(cardToken, customerId string) (cardId st
 	}
 	crd, err := card.New(params)
 	if err != nil {
+		log.Println(err)
 		return "", err
 	}
 
@@ -218,6 +241,7 @@ func (s *SubscriptionHelper) createSubscription(customerId string, plan enums.Pl
 	planPriceId := plan.PlanStripeProductId()
 
 	if len(planPriceId) == 0 {
+		log.Println(err)
 		return "", errors.ErrPaymentError.New("")
 	}
 
@@ -231,6 +255,7 @@ func (s *SubscriptionHelper) createSubscription(customerId string, plan enums.Pl
 	}
 	sub, err := subscription.New(params)
 	if err != nil {
+		log.Println(err)
 		return "", err
 	}
 

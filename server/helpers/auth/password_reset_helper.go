@@ -2,6 +2,7 @@ package auth
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/mbaraa/apollo-music/data"
@@ -32,6 +33,7 @@ func NewPasswordResetHelper(
 func (p *PasswordResetHelper) ResetPassword(email, origin string) (entities.JSON, int) {
 	dbUser, err := p.repo.GetByConds("email = ?", email)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
@@ -39,12 +41,14 @@ func (p *PasswordResetHelper) ResetPassword(email, origin string) (entities.JSON
 		"email": email,
 	}, jwt.PasswordRestToken, time.Now().UTC().Add(time.Minute*30))
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
 	passwordResetLink := fmt.Sprintf("%s/password-reset/%s", origin, passwordResetToken)
 	err = mailer.SendPasswordReset(passwordResetLink, dbUser[0].Email)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -63,11 +67,13 @@ func (p *PasswordResetHelper) UpdatePassword(token, newPassword string) (entitie
 
 	dbUser, err := p.repo.GetByConds("email = ?", claims.Payload["email"])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.MinCost)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -75,6 +81,7 @@ func (p *PasswordResetHelper) UpdatePassword(token, newPassword string) (entitie
 		Password: string(hashedPassword),
 	}, "id = ?", dbUser[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 

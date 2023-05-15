@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"log"
 	"sort"
 
 	"github.com/mbaraa/apollo-music/data"
@@ -44,16 +45,19 @@ func NewLibraryHelper(
 func (m *LibraryHelper) GetMusic(token string) (entities.JSON, int) {
 	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
 	dbUser, err := m.userRepo.GetByConds("email = ?", claims.Payload["email"])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	dbMusic, err := m.musicRepo.GetByConds("user_id = ?", dbUser[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
@@ -88,21 +92,25 @@ func (m *LibraryHelper) GetMusic(token string) (entities.JSON, int) {
 func (m *LibraryHelper) GetAlbum(token, albumPublicId string) (entities.JSON, int) {
 	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
 	dbUser, err := m.userRepo.GetByConds("email = ?", claims.Payload["email"])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	dbAlbum, err := m.albumRepo.GetByConds("public_id = ?", albumPublicId)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	dbMusic, err := m.musicRepo.GetByConds("user_id = ? and album_id = ?", dbUser[0].Id, dbAlbum[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
@@ -144,16 +152,19 @@ func (m *LibraryHelper) GetAlbum(token, albumPublicId string) (entities.JSON, in
 func (m *LibraryHelper) GetAlbums(token string) (entities.JSON, int) {
 	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
 	dbUser, err := m.userRepo.GetByConds("email = ?", claims.Payload["email"])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	dbAlbums, err := m.albumRepo.GetByConds("user_id = ?", dbUser[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
@@ -178,21 +189,25 @@ func (m *LibraryHelper) GetAlbums(token string) (entities.JSON, int) {
 func (m *LibraryHelper) GetArtist(token, artistPublicId string) (entities.JSON, int) {
 	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
 	dbUser, err := m.userRepo.GetByConds("email = ?", claims.Payload["email"])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	dbArtist, err := m.artistRepo.GetByConds("public_id = ?", artistPublicId)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	dbMusic, err := m.musicRepo.GetByConds("user_id = ? and artist_id = ?", dbUser[0].Id, dbArtist[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
@@ -231,16 +246,19 @@ func (m *LibraryHelper) GetArtist(token, artistPublicId string) (entities.JSON, 
 func (m *LibraryHelper) GetArtists(token string) (entities.JSON, int) {
 	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
 	dbUser, err := m.userRepo.GetByConds("email = ?", claims.Payload["email"])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	dbArtists, err := m.artistRepo.GetByConds("user_id = ?", dbUser[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
@@ -262,6 +280,7 @@ func (m *LibraryHelper) GetArtists(token string) (entities.JSON, int) {
 func (m *LibraryHelper) GetYear(token, yearPublicId string) (entities.JSON, int) {
 	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
@@ -272,11 +291,13 @@ func (m *LibraryHelper) GetYear(token, yearPublicId string) (entities.JSON, int)
 
 	dbYear, err := m.yearRepo.GetByConds("public_id = ?", yearPublicId)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	dbMusic, err := m.musicRepo.GetByConds("user_id = ? and year_id = ?", dbUser[0].Id, dbYear[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
@@ -315,16 +336,19 @@ func (m *LibraryHelper) GetYear(token, yearPublicId string) (entities.JSON, int)
 func (m *LibraryHelper) GetYears(token string) (entities.JSON, int) {
 	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
 	dbUser, err := m.userRepo.GetByConds("email = ?", claims.Payload["email"])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	dbYears, err := m.yearRepo.GetByConds("user_id = ?", dbUser[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
@@ -346,21 +370,25 @@ func (m *LibraryHelper) GetYears(token string) (entities.JSON, int) {
 func (m *LibraryHelper) GetGenre(token, genrePublicId string) (entities.JSON, int) {
 	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
 	dbUser, err := m.userRepo.GetByConds("email = ?", claims.Payload["email"])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	dbGenre, err := m.genreRepo.GetByConds("public_id = ?", genrePublicId)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	dbMusic, err := m.musicRepo.GetByConds("user_id = ? and genre_id = ?", dbUser[0].Id, dbGenre[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
@@ -399,16 +427,19 @@ func (m *LibraryHelper) GetGenre(token, genrePublicId string) (entities.JSON, in
 func (m *LibraryHelper) GetGenres(token string) (entities.JSON, int) {
 	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
 	dbUser, err := m.userRepo.GetByConds("email = ?", claims.Payload["email"])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	dbGenres, err := m.genreRepo.GetByConds("user_id = ?", dbUser[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 

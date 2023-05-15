@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"log"
+
 	"github.com/mbaraa/apollo-music/data"
 	"github.com/mbaraa/apollo-music/entities"
 	"github.com/mbaraa/apollo-music/errors"
@@ -27,11 +29,13 @@ func NewSessionHelper(
 func (s *SessionHelper) CheckSession(token string) (entities.JSON, int) {
 	claims, err := s.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
 	dbUser, err := s.repo.GetByConds("email = ?", claims.Payload["email"])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 

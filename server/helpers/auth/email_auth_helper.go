@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"log"
 	"net/mail"
 	"time"
 
@@ -41,11 +42,13 @@ func (e *EmailHelper) SigninUser(user entities.User) (entities.JSON, int) {
 
 	dbUser, err := e.repo.GetByConds("email = ?", user.Email)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidCredentials, nil)
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(dbUser[0].Password), []byte(user.Password))
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidCredentials, nil)
 	}
 
@@ -59,6 +62,7 @@ func (e *EmailHelper) SigninUser(user entities.User) (entities.JSON, int) {
 		otp := strings.GenerateOTP()
 		hashedOTP, err := bcrypt.GenerateFromPassword([]byte(otp), bcrypt.MinCost)
 		if err != nil {
+			log.Println(err)
 			return response.Build(errors.InternalServerError, nil)
 		}
 
@@ -69,11 +73,13 @@ func (e *EmailHelper) SigninUser(user entities.User) (entities.JSON, int) {
 		}
 		err = e.verificationRepo.Add(&verification)
 		if err != nil {
+			log.Println(err)
 			return response.Build(errors.InternalServerError, nil)
 		}
 
 		err = mailer.SendOTP(otp, dbUser[0].Email)
 		if err != nil {
+			log.Println(err)
 			return response.Build(errors.InternalServerError, nil)
 		}
 		sub = jwt.OtpToken
@@ -84,6 +90,7 @@ func (e *EmailHelper) SigninUser(user entities.User) (entities.JSON, int) {
 		"publicId": dbUser[0].PublicId,
 	}, sub, expirationTime)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -106,6 +113,7 @@ func (e *EmailHelper) SignupUser(user entities.User) (entities.JSON, int) {
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.MinCost)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -117,12 +125,14 @@ func (e *EmailHelper) SignupUser(user entities.User) (entities.JSON, int) {
 	}
 	err = e.repo.Add(&dbUser)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.EmailExists, nil)
 	}
 
 	otp := strings.GenerateOTP()
 	hashedOTP, err := bcrypt.GenerateFromPassword([]byte(otp), bcrypt.MinCost)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -134,11 +144,13 @@ func (e *EmailHelper) SignupUser(user entities.User) (entities.JSON, int) {
 	}
 	err = e.verificationRepo.Add(&verification)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
 	err = mailer.SendOTP(otp, dbUser.Email)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -147,6 +159,7 @@ func (e *EmailHelper) SignupUser(user entities.User) (entities.JSON, int) {
 		"publicId": dbUser.PublicId,
 	}, jwt.OtpToken, expirationTime)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 

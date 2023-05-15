@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"log"
 	"time"
 
 	"github.com/mbaraa/apollo-music/data"
@@ -45,16 +46,19 @@ func (o *OTPHelper) VerifyOTP(token, verificationCode string) (entities.JSON, in
 
 	dbUser, err := o.userRepo.GetByConds("email = ?", claims.Payload["email"].(string))
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	verification, err := o.repo.GetByConds("user_id = ?", dbUser[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidOTP, nil)
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(verification[len(verification)-1].OTP), []byte(verificationCode))
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidOTP, nil)
 	}
 
@@ -62,6 +66,7 @@ func (o *OTPHelper) VerifyOTP(token, verificationCode string) (entities.JSON, in
 		Status: enums.InactiveStatus,
 	}, "id = ?", dbUser[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -70,11 +75,13 @@ func (o *OTPHelper) VerifyOTP(token, verificationCode string) (entities.JSON, in
 		"publicId": dbUser[0].PublicId,
 	}, jwt.CheckoutToken, time.Now().UTC().Add(time.Hour*24*30))
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
 	err = o.repo.Delete("id = ?", verification[len(verification)-1].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -86,21 +93,25 @@ func (o *OTPHelper) VerifyOTP(token, verificationCode string) (entities.JSON, in
 func (o *OTPHelper) ResendOTP(token string) (entities.JSON, int) {
 	claims, err := o.jwtUtil.Decode(token, jwt.OtpToken)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
 	if claims.Subject != jwt.OtpToken {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
 	dbUser, err := o.userRepo.GetByConds("email = ?", claims.Payload["email"].(string))
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
 	otp := strings.GenerateOTP()
 	hashedOTP, err := bcrypt.GenerateFromPassword([]byte(otp), bcrypt.MinCost)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
@@ -114,11 +125,13 @@ func (o *OTPHelper) ResendOTP(token string) (entities.JSON, int) {
 	}
 	err = o.repo.Add(&verification)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 
 	err = mailer.SendOTP(otp, dbUser[0].Email)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InternalServerError, nil)
 	}
 

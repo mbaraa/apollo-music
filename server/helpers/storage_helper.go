@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"log"
 	"os"
 
 	"github.com/mbaraa/apollo-music/config/env"
@@ -33,24 +34,29 @@ func NewStorageHelper(
 func (s *StorageHelper) CheckUserAndStorage(token, userPublicId, storageType string) bool {
 	claims, err := s.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
+		log.Println(err)
 		return false
 	}
 
 	if userPublicId != claims.Payload["publicId"] {
+		log.Println(err)
 		return false
 	}
 
 	if !s.checkStorageType(storageType) {
+		log.Println(err)
 		return false
 	}
 
 	dbUser, err := s.userRepo.GetByConds("public_id = ?", userPublicId)
 	if err != nil {
+		log.Println(err)
 		return false
 	}
 
 	_, err = s.repo.GetByConds("user_id = ?", dbUser[0].Id)
 	if err != nil {
+		log.Println(err)
 		return false
 	}
 
@@ -60,16 +66,19 @@ func (s *StorageHelper) CheckUserAndStorage(token, userPublicId, storageType str
 func (s *StorageHelper) GetDetails(token string) (entities.JSON, int) {
 	claims, err := s.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.InvalidToken, nil)
 	}
 
 	dbUser, err := s.userRepo.GetByConds("public_id = ?", claims.Payload["publicId"])
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.Unauthorized, nil)
 	}
 
 	dbStorage, err := s.repo.GetByConds("user_id = ?", dbUser[0].Id)
 	if err != nil {
+		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
@@ -85,23 +94,37 @@ func (s *StorageHelper) GetDetails(token string) (entities.JSON, int) {
 func (s *StorageHelper) createStorage(size int64, user models.User) error {
 	err := os.Mkdir(env.MusicDirectory()+"/"+user.PublicId, 0755)
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 
-	return s.repo.Add(&models.Storage{
+	err = s.repo.Add(&models.Storage{
 		UserId: user.Id,
 		Size:   size,
 		Used:   0,
 	})
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
 }
 
 func (s *StorageHelper) destroyStorage(user models.User) error {
 	err := os.RemoveAll(env.MusicDirectory() + "/" + user.PublicId)
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 
-	return s.repo.Delete("user_id = ?", user.Id)
+	err = s.repo.Delete("user_id = ?", user.Id)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
 }
 
 func (s *StorageHelper) checkStorageType(tp string) bool {

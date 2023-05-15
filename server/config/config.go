@@ -1,6 +1,8 @@
 package config
 
 import (
+	"log"
+
 	"github.com/mbaraa/apollo-music/data"
 	"github.com/mbaraa/apollo-music/data/db"
 	"github.com/mbaraa/apollo-music/entities"
@@ -37,6 +39,8 @@ func init() {
 	yearRepo = db.NewBaseDB[models.MusicReleaseYear](dbConnection)
 	genreRepo = db.NewBaseDB[models.MusicGenre](dbConnection)
 	jwtUtil = jwt.NewJWTImpl()
+
+	log.SetFlags(log.LstdFlags | log.Llongfile | log.LUTC)
 }
 
 func UserRepo() data.CRUDRepo[models.User] {
