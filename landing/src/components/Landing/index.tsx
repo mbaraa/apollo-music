@@ -1,11 +1,12 @@
-import { useNavigate } from "react-router-dom";
+import Mobile from "./Mobile";
 
 export default function Landing() {
-  const navigate = useNavigate();
   return (
-    <>
-      Apollo Music, the coolest cloud audio player! <br />{" "}
-      <button onClick={() => navigate("/signup")}>Go to signup</button>
-    </>
+    <div>
+      <div className="md:hidden">
+        <Mobile />
+      </div>
+      <div className="hidden md:block">desktop</div>
+    </div>
   );
 }

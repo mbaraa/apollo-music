@@ -24,9 +24,9 @@ function App() {
     { path: "/cancel", element: <Cancel /> },
   ]);
   return (
-    <>
+    <div className="font-[Comfortaa]">
       <RouterProvider router={router} />
-    </>
+    </div>
   );
 }
 
