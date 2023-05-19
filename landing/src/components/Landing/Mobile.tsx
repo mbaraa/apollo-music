@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 export default function Mobile() {
   const navigate = useNavigate();
   return (
-    <div className="w-[100vw] h-[100vh] bg-[#273D50]">
+    <div className="w-[100vw] h-[100vh] bg-dark-primary text-dark-secondary">
       <img className="pt-[22px] ml-[-102px]" src="/apollo-music-logo.png" />
       <div className="text-white pl-[20px] pt-[60px]">
         <h1 className="text-[48px]">Apollo Music</h1>

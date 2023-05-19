@@ -1,12 +1,26 @@
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 /** @type {import('tailwindcss').Config} */
 export default {
   mode: "jit",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    fontFamily: {
-      Comfortaa: ["Comfortaa"],
+    colors: {
+      dark: {
+        primary: "#273d50",
+        secondary: "#fff",
+        accent: "#add0fb",
+        neutral: "#051220",
+      },
+      light: {},
+      ...defaultTheme.colors,
     },
-    extend: {},
+  },
+  extend: {
+    fontFamily: {
+      Comfortaa: ["Comfortaa", "sans"],
+      IBMPlexSans: ["IBM Plex Sans", "sans"],
+    },
   },
   plugins: [],
 };
