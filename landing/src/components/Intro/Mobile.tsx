@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 export default function Mobile() {
   const navigate = useNavigate();
   return (
-    <div className="w-[100vw] h-[100vh] bg-[#273D50]">
+    <div className="w-[100vw] h-[100vh] bg-dark-primary">
       <img
         className="pt-[92px] relative translate-x-[-50%] left-[50%]"
         src="/listing-to-music.png"
       />
-      <div className="text-white pl-[20px] pt-[42px]">
+      <div className="text-dark-secondary pl-[20px] pt-[42px]">
         <h2 className="pt-[20px] text-[24px]">
           Enjoy ad-free music, or self hosted music with Apollo Music!
         </h2>
@@ -16,13 +16,13 @@ export default function Mobile() {
       <div className="absolute bottom-[40px] left-[50%] translate-x-[-50%]">
         <div className="relative w-[210px] font-[700] text-[16px/20px]">
           <button
-            className="inline bg-white text-black rounded-[20px] p-[13px] w-[110px] h-[47px] text-center"
+            className="inline bg-dark-secondary text-dark-neutral rounded-[20px] p-[13px] w-[110px] h-[47px] text-center"
             onClick={() => navigate("/sign-up")}
           >
             <span className="">Sign up</span>
           </button>
           <button
-            className="inline bg-[#add8fb] text-black rounded-[20px] ml-[-18px] p-[13px] w-[110px] h-[47px] shadow-md"
+            className="inline bg-[#add8fb] text-dark-neutral rounded-[20px] ml-[-18px] p-[13px] w-[110px] h-[47px] shadow-md"
             onClick={() =>
               window.open("https://apollo-music.app/sign-in", "_self")
             }
