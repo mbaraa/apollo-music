@@ -16,7 +16,7 @@ const en: TranslationValues = {
 	[TranslationKeys.TITLE_LIBRARY_MUSIC_GENRERS]: "Genres - Apollo Music",
 	[TranslationKeys.TITLE_EQUALIZER]: "Equalizer - Apollo Music",
 	[TranslationKeys.TITLE_SETTINGS]: "Settings - Apollo Music",
-	[TranslationKeys.TITLE_PLAYING_SUFFIX]: " is playing on Apollo Music",
+	[TranslationKeys.TITLE_PLAYING_SUFFIX]: " - Apollo Music",
 	[TranslationKeys.TITLE_SIGN_IN]: "Sign in - Apollo Music",
 	[TranslationKeys.TITLE_RESET_PASSWORD]: "Reset password - Apollo Music",
 	[TranslationKeys.TITLE_FORGOT_PASSWORD]: "Forgot password - Apollo Music",

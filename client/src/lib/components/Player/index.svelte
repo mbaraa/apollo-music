@@ -1,6 +1,8 @@
 <script lang="ts">
 	import config from "$lib/config";
 	import type { Music } from "$lib/entities";
+	import { translate } from "$lib/locale";
+	import { TranslationKeys } from "$lib/strings/keys";
 	import Requests from "$lib/utils/requests/Requests";
 	import Next from "./Next.svelte";
 	import Pause from "./Pause.svelte";
@@ -14,6 +16,7 @@
 	let duration = 0;
 	let currentAudio: Music = { title: "Play Queue is Empty" } as Music;
 
+	let pageTitle = translate(TranslationKeys.TITLE_LIBRARY);
 	let expand = false;
 	let height = "15vh";
 
@@ -109,8 +112,13 @@
 				player.play();
 			});
 		currentAudio = music;
+		pageTitle = currentAudio.title + translate(TranslationKeys.TITLE_PLAYING_SUFFIX);
 	}
 </script>
+
+<svelte:head>
+	<title>{pageTitle}</title>
+</svelte:head>
 
 {#if playlist && playlist.length > 0}
 	<div
