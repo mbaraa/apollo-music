@@ -205,42 +205,28 @@ func (m *LibraryHelper) GetArtist(token, artistPublicId string) (entities.JSON, 
 		return response.Build(errors.NotFound, nil)
 	}
 
-	dbMusic, err := m.musicRepo.GetByConds("user_id = ? and artist_id = ?", dbUser[0].Id, dbArtist[0].Id)
+	dbAlbums, err := m.albumRepo.GetByConds("user_id = ? and artist_id = ?", dbUser[0].Id, dbArtist[0].Id)
 	if err != nil {
 		log.Println(err)
 		return response.Build(errors.NotFound, nil)
 	}
 
-	music := make([]entities.Music, 0)
-	for _, m := range dbMusic {
-		music = append(music, entities.Music{
-			PublicId:    m.PublicId,
-			Title:       m.Title,
-			AlbumTitle:  m.AlbumTitle,
-			ArtistName:  m.ArtistName,
-			Year:        m.Year,
-			Genre:       m.Genre,
-			TrackNumber: m.TrackNumber,
-			Audio: entities.Audio{
-				FileName:    m.Audio.FileName,
-				FileSize:    float64(m.Audio.FileSize),
-				LastAccess:  m.Audio.LastAccess,
-				AccessTimes: m.Audio.AccessTimes,
-				PublicPath:  m.Audio.PublicPath,
-				Type:        m.Audio.Type,
-			},
+	albums := make([]entities.MusicAlbum, 0)
+	for _, album := range dbAlbums {
+		albums = append(albums, entities.MusicAlbum{
+			PublicId:   album.PublicId,
+			Title:      album.Title,
+			ArtistName: album.ArtistName,
+			Year:       album.Year,
+			Genre:      album.Genre,
 		})
 	}
 
-	sort.Slice(music, func(i, j int) bool {
-		return music[i].Title < music[j].Title
+	sort.Slice(albums, func(i, j int) bool {
+		return albums[i].Title < albums[j].Title
 	})
 
-	return response.Build(errors.None, entities.MusicArtist{
-		PublicId: dbArtist[0].PublicId,
-		Name:     dbArtist[0].Name,
-		Songs:    music,
-	})
+	return response.Build(errors.None, albums)
 }
 
 func (m *LibraryHelper) GetArtists(token string) (entities.JSON, int) {
