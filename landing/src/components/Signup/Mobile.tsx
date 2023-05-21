@@ -40,10 +40,7 @@ export default function Mobile() {
         </h1>
         <img className="mr-[-120px] w-[248px] h-[218px]" src="/cassette.png" />
       </div>
-      <form
-        onSubmit={handleSignup}
-        className="pt-[0px] pl-[30px] font-IBMPlexSans"
-      >
+      <form onSubmit={handleSignup} className="pt-[0px] pl-[30px]">
         <input
           className="block bg-dark-primary text-dark-secondary border-[2px] border-dark-accent rounded-[20px] p-[16px] h-[56px] w-[330px]"
           type="text"
@@ -100,7 +97,7 @@ export default function Mobile() {
         Already have an account? Log in{" "}
         <a
           href="https://apollo-music.app/sign-in"
-          className="underline hover:opacity-[0.9] font-IBMPlexSans"
+          className="underline hover:opacity-[0.9]"
         >
           here
         </a>{" "}
