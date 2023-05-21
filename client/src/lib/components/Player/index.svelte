@@ -125,6 +125,7 @@
 					<div
 						class="border-[1px] h-[40px]"
 						on:click={() => {
+							toggleExpand();
 							fetchMusic(music);
 						}}
 					>
@@ -203,22 +204,16 @@
 
 	.move-on-overflow p {
 		animation-name: scroll;
-		animation-duration: 10s;
+		animation-duration: 5s;
 		animation-iteration-count: infinite;
 	}
 
 	@keyframes scroll {
 		0% {
-			transform: translateX(0);
-		}
-		25% {
-			transform: translateX(-25%);
-		}
-		50% {
-			transform: translateX(-50%);
+			transform: translateX(25%);
 		}
 		100% {
-			transform: translateX(-100%);
+			transform: translateX(-75%);
 		}
 	}
 </style>
