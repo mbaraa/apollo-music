@@ -1,5 +1,4 @@
-import { Token } from "@stripe/stripe-js";
-import Checkout from "./components/Checkout";
+import SelectPlan from "./components/SelectPlan";
 import Signup from "./components/Signup";
 import OTP from "./components/OTP";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -14,14 +13,8 @@ function App() {
     { path: "/sign-up", element: <Signup /> },
     { path: "/verify-otp", element: <OTP /> },
     {
-      path: "/checkout",
-      element: (
-        <Checkout
-          handler={(token: Token) => {
-            console.log(token);
-          }}
-        />
-      ),
+      path: "/select-plan",
+      element: <SelectPlan />,
     },
     { path: "/cancel", element: <Cancel /> },
   ]);

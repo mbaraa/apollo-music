@@ -24,7 +24,7 @@ export default function OTP() {
       })
       .then((resp) => {
         localStorage.setItem("checkoutToken", resp["data"]["token"]);
-        navigate("/checkout");
+        navigate("/select-plan");
       })
       .catch((err) => {
         console.error(err);

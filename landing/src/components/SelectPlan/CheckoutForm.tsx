@@ -37,7 +37,11 @@ export default function CheckoutForm({
   return (
     <form onSubmit={handleSubmit}>
       <CardSection />
-      <button onClick={() => {}}>Checkout & Finish Signup</button>
+      <input
+        type="submit"
+        className="bg-dark-accent text-dark-neutral w-[330px] h-[48px] rounded-[20px] mt-[25px] text-[20px] cursor-pointer"
+        value={"Checkout & Finish Signin up"}
+      />
     </form>
   );
 }
