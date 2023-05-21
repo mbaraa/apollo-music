@@ -6,7 +6,7 @@
 	import Requests from "$lib/utils/requests/Requests";
 	import Loading from "$lib/ui/Loading.svelte";
 	import AlbumTile from "$lib/components/music/AlbumTile.svelte";
-	import Player from "$lib/components/Player.svelte";
+	import Player from "$lib/components/Player/index.svelte";
 
 	let albums: Album[];
 
@@ -38,7 +38,7 @@
 
 <main>
 	{#if albums}
-		<div>
+		<div class="h-[85vh] overflow-y-scroll">
 			{#each albums as album}
 				<div on:click={() => playAlbum(album)}>
 					<AlbumTile {album} />

@@ -2,23 +2,27 @@
 	import config from "$lib/config";
 	import type { Music } from "$lib/entities";
 	import Requests from "$lib/utils/requests/Requests";
+	import Next from "./Next.svelte";
+	import Pause from "./Pause.svelte";
+	import Play from "./Play.svelte";
+	import Previous from "./Previous.svelte";
 
 	export let playlist: Music[];
 
 	let player: HTMLAudioElement;
 	let currentTime = 0;
 	let duration = 0;
-	let currentAudio: Music = { title: "No current music" } as Music;
+	let currentAudio: Music = { title: "Play Queue is Empty" } as Music;
 
 	let expand = false;
-	let height = "100px";
+	let height = "15vh";
 
 	function toggleExpand() {
 		expand = !expand;
 		if (expand) {
 			height = "100vh";
 		} else {
-			height = "100px";
+			height = "15vh";
 		}
 	}
 
@@ -108,58 +112,75 @@
 	}
 </script>
 
-<div class="text-white absolute bottom-0 w-[100vw] bg-black" style="height: {height};">
-	{#if expand}
-		{#each playlist as music}
-			<div
-				class="border-[1px] h-[40px]"
-				on:click={() => {
-					fetchMusic(music);
-				}}
-			>
-				{music.title}
+{#if playlist && playlist.length > 0}
+	<div
+		class="text-dark-secondary absolute bottom-0 w-[100vw] bg-dark-primary"
+		on:click={toggleExpand}
+		on:keydown={() => {}}
+		style="height: {height};"
+	>
+		{#if expand}
+			<div class="h-[80vh] overflow-y-scroll">
+				{#each playlist as music}
+					<div
+						class="border-[1px] h-[40px]"
+						on:click={() => {
+							fetchMusic(music);
+						}}
+					>
+						{music.title}
+					</div>
+				{/each}
 			</div>
-		{/each}
-		<br />
-	{/if}
-	<div class="float-left">
-		<br />
-		<span class="text-[20px] font-bold">{currentAudio.title}</span>
-		|
-		<span class="text-[20px]">{formatTime(currentTime)}/{formatTime(duration)}</span>
-		<br />
-		<input
-			type="range"
-			class="w-full"
-			value={currentTime}
-			on:change={handleSeeking}
-			min={0}
-			max={duration}
-		/>
-		<br />
-		<button class="p-[10px] border-[1px] border-white rounded-[10px]" on:click={previous}
-			>Prevoius</button
-		>
-		<button
-			class="p-[10px] border-[1px] border-white rounded-[10px]"
-			on:click={() => {
-				player.play();
-			}}>Play</button
-		>
-		<button
-			class="p-[10px] border-[1px] border-white rounded-[10px]"
-			on:click={() => {
-				player.pause();
-			}}>Pause</button
-		>
-		<button class="p-[10px] border-[1px] border-white rounded-[10px]" on:click={next}>Next</button>
-		<button class="p-[10px] border-[1px] border-white rounded-[10px]" on:click={random}
-			>Random</button
-		>
+		{/if}
+		<div class="p-[10px]">
+			<div class="float-left text-dark-secondary font-IBMPlexSans pb-[10px]" on:keydown={() => {}}>
+				<img src="/favicon.ico" class="w-[52px] h-[52px] inline" alt="Album Cover" />
+				<div class="pl-[10px] text-[18px] font-bold move-on-overflow inline-block">
+					<p>
+						{currentAudio.title}
+					</p>
+				</div>
+				<!-- <span class="text-[20px]">{formatTime(currentTime)}/{formatTime(duration)}</span> -->
+			</div>
+			<div class="float-right">
+				<button
+					class="p-[5px]"
+					on:click={() => {
+						toggleExpand();
+						previous();
+					}}
+				>
+					<Previous />
+				</button>
+				<button
+					class="p-[5px]"
+					on:click={() => {
+						toggleExpand();
+						if (player.paused) player.play();
+						else player.pause();
+					}}
+					>{#if player?.paused}<Play /> {:else} <Pause /> {/if}</button
+				>
+				<button
+					class="p-[5px]"
+					on:click={() => {
+						toggleExpand();
+						next();
+					}}><Next /></button
+				>
+			</div>
+			<input
+				type="range"
+				class="w-full"
+				value={currentTime}
+				on:change={handleSeeking}
+				min={0}
+				max={duration}
+			/>
+		</div>
 	</div>
-	<button class="float-right" on:click={toggleExpand}>expand</button>
-</div>
-
+{/if}
 <audio
 	class="hidden"
 	bind:this={player}
@@ -171,6 +192,33 @@
 	on:progress={() => {
 		console.log("downloading...");
 	}}
->
-	meow
-</audio>
+/>
+
+<style>
+	.move-on-overflow {
+		width: 150px;
+		overflow-x: scroll;
+		white-space: nowrap;
+	}
+
+	.move-on-overflow p {
+		animation-name: scroll;
+		animation-duration: 10s;
+		animation-iteration-count: infinite;
+	}
+
+	@keyframes scroll {
+		0% {
+			transform: translateX(0);
+		}
+		25% {
+			transform: translateX(-25%);
+		}
+		50% {
+			transform: translateX(-50%);
+		}
+		100% {
+			transform: translateX(-100%);
+		}
+	}
+</style>
