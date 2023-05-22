@@ -23,9 +23,19 @@ func NewStorageApi(helper *helpers.StorageHelper) *StorageApi {
 }
 
 func (s *StorageApi) Bind(app *fiber.App) {
+	app.Use(middlewares.AllowCors)
+	app.Static("/storage", env.MusicDirectory(), fiber.Static{
+		Next: func(ctx *fiber.Ctx) bool {
+			var (
+				token = ctx.Query("token")
+			)
+			return !s.helper.CheckUserToken(token)
+		},
+	})
+
 	storage := app.Group("/storage")
 	storage.Use(middlewares.AllowCors)
-	storage.Get("/:userPublicId/:storageType/:fileName", s.handleGetStatic)
+	//storage.Get("/:userPublicId/:storageType/:fileName", s.handleGetStatic)
 	storage.Get("/", s.handleGetDetails)
 }
 

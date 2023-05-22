@@ -63,6 +63,16 @@ func (s *StorageHelper) CheckUserAndStorage(token, userPublicId, storageType str
 	return true
 }
 
+func (s *StorageHelper) CheckUserToken(token string) bool {
+	err := s.jwtUtil.Validate(token, jwt.SessionToken)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+
+	return true
+}
+
 func (s *StorageHelper) GetDetails(token string) (entities.JSON, int) {
 	claims, err := s.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {

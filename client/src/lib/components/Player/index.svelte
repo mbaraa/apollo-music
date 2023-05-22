@@ -4,6 +4,7 @@
 	import { translate } from "$lib/locale";
 	import { TranslationKeys } from "$lib/strings/keys";
 	import Requests from "$lib/utils/requests/Requests";
+	import { createEventDispatcher } from "svelte";
 	import Next from "./Next.svelte";
 	import Pause from "./Pause.svelte";
 	import Play from "./Play.svelte";
@@ -31,9 +32,10 @@
 
 	function handleSeeking(event: Event) {
 		const s = event.target as HTMLInputElement;
-		player.currentTime = Number(s.value);
-		console.log(s.value);
-		player = player;
+		const seekTime = Number(s.value);
+		//const audio = document.getElementById("aud") as any;
+		player.currentTime = seekTime;
+		//player = audio;
 	}
 
 	function isPlayable(musicName: string): boolean {
@@ -94,23 +96,16 @@
 	}
 
 	async function fetchMusic(music: Music) {
-		await Requests.makeAuthRequest("GET", `storage/${music.audio.publicPath}`, null)
-			.then((resp) => resp.blob())
-			.then((audio) => {
-				if (player) {
-					player.pause();
-					player.currentTime = 0;
-					currentTime = 0;
-				}
-				// player = new Audio(URL.createObjectURL(audio));
-				player.src = URL.createObjectURL(audio);
-				// player.preload = "auto";
-				// player.controls = true;
-				// player.oncanplaythrough = handleLoad;
-				//player.onended = handleFinishedSong;
-				player.load();
-				player.play();
-			});
+		if (player) {
+			player.pause();
+			player.currentTime = 0;
+			currentTime = 0;
+		}
+		player.src = `${config["backendAddress"]}/storage/${music.audio.publicPath}?token=${
+			localStorage.getItem("token") ?? ""
+		}`;
+		player.load();
+		player.play();
 		currentAudio = music;
 		pageTitle = currentAudio.title + translate(TranslationKeys.TITLE_PLAYING_SUFFIX);
 	}
@@ -190,11 +185,13 @@
 		</div>
 	</div>
 {/if}
+
 <audio
+	id="aud"
 	class="hidden"
 	bind:this={player}
 	controls
-	preload="auto"
+	preload="none"
 	on:loadeddata={handleLoad}
 	on:timeupdate={handleUpdateTime}
 	on:ended={handleFinishedSong}
