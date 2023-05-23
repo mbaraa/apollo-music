@@ -25,21 +25,24 @@ func GetTestDBConnector() *gorm.DB {
 func getDBConnector(dbName string) *gorm.DB {
 	if instance == nil {
 		var err error
-		createDBDsn := fmt.Sprintf("%s:%s@tcp(%s)/", env.DBUser(), env.DBPassword(), env.DBHost())
-		database, err := gorm.Open(mysql.Open(createDBDsn), &gorm.Config{})
-		if err != nil {
-			panic(err)
+		var dsn = env.DBDSN()
+		if len(dsn) == 0 {
+			createDBDsn := fmt.Sprintf("%s:%s@tcp(%s)/", env.DBUser(), env.DBPassword(), env.DBHost())
+			database, err := gorm.Open(mysql.Open(createDBDsn), &gorm.Config{})
+			if err != nil {
+				panic(err)
+			}
+
+			err = database.Exec("CREATE DATABASE IF NOT EXISTS " + dbName + ";").Error
+			if err != nil {
+				panic(err)
+			}
+			dsn = fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=True&loc=Local", env.DBUser(), env.DBPassword(), env.DBHost(), dbName)
 		}
 
-		err = database.Exec("CREATE DATABASE IF NOT EXISTS " + dbName + ";").Error
-		if err != nil {
-			panic(err)
-		}
-
-		instance, err = gorm.Open(mysql.New(mysql.Config{
-			DriverName: "mysql",
-			DSN:        fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=True&loc=Local", env.DBUser(), env.DBPassword(), env.DBHost(), dbName),
-		}))
+		instance, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+			DisableForeignKeyConstraintWhenMigrating: true,
+		})
 		if err != nil {
 			panic(err)
 		}

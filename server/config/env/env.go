@@ -22,6 +22,7 @@ func PortNumber() string         { return os.Getenv("PORT") }
 func DBUser() string             { return os.Getenv("DB_USER") }
 func DBPassword() string         { return os.Getenv("DB_PASSWORD") }
 func DBHost() string             { return os.Getenv("DB_HOST") }
+func DBDSN() string              { return os.Getenv("DB_DSN") }
 func AllowedClients() string     { return os.Getenv("ALLOWED_CLIENTS") }
 func MachineAddress() string     { return os.Getenv("MACHINE_IP") }
 func JWTSecret() []byte          { return []byte(os.Getenv("JWT_SECRET")) }
