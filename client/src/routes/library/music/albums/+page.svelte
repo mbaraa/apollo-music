@@ -2,20 +2,19 @@
 	import { translate } from "$lib/locale";
 	import { TranslationKeys } from "$lib/strings/keys";
 	import { onMount } from "svelte";
-	import type { Album } from "$lib/entities";
+	import type { Album, Music } from "$lib/entities";
 	import Requests from "$lib/utils/requests/Requests";
 	import Loading from "$lib/ui/Loading.svelte";
 	import AlbumTile from "$lib/components/music/AlbumTile.svelte";
 	import Player from "$lib/components/Player/index.svelte";
 
 	let albums: Album[];
-
-	let _album: Album;
+	$: songs = new Array<Music>();
 
 	async function playAlbum(album: Album) {
-		_album = await Requests.makeAuthRequest("GET", `library/album/${album.publicId}`, null)
+		songs = await Requests.makeAuthRequest("GET", `library/album/${album.publicId}`, null)
 			.then((resp) => resp.json())
-			.then((resp) => resp["data"])
+			.then((resp) => resp["data"]["songs"])
 			.catch((err) => {
 				console.error(err);
 			});
@@ -28,7 +27,6 @@
 			.catch((err) => {
 				console.error(err);
 			});
-		_album = albums[0];
 	});
 </script>
 
@@ -45,7 +43,7 @@
 				</div>
 			{/each}
 		</div>
-		<Player playlist={_album.songs} />
+		<Player playlist={songs} on:playlistchange={() => {}} />
 	{:else}
 		<Loading />
 	{/if}

@@ -10,9 +10,13 @@
 	import Previous from "./Previous.svelte";
 
 	export let playlist: Music[];
+	export let selectedSong: Music;
 	export let cover = "/favicon.ico";
 	export let playOnAdd = true;
 	export let shuffle = false;
+
+	$: canPlay = playlist !== null && playlist.length > 0;
+	$: _selectedSong = canPlay ? playlist[0] : selectedSong;
 
 	let player: HTMLAudioElement;
 	let currentTime = 0;
@@ -122,88 +126,86 @@
 		currentAudio = music;
 		pageTitle = currentAudio.title + translate(TranslationKeys.TITLE_PLAYING_SUFFIX);
 	}
-
-	onMount(() => {
-		if (playOnAdd) {
-			fetchMusic(playlist[0]);
-		}
-	});
 </script>
 
 <svelte:head>
 	<title>{pageTitle}</title>
 </svelte:head>
 
-{#if playlist && playlist.length > 0}
-	<div
-		class="text-dark-secondary absolute bottom-0 w-[100vw] bg-dark-primary"
-		on:click={toggleExpand}
-		on:keydown={() => {}}
-		style="height: {height};"
-	>
-		{#if expand}
-			<div class="h-[80vh] overflow-y-scroll">
-				{#each playlist as music}
-					<div
-						class="border-[1px] h-[40px]"
-						on:click={() => {
-							toggleExpand();
-							fetchMusic(music);
-						}}
-					>
-						{music.title}
-					</div>
-				{/each}
-			</div>
-		{/if}
-		<div class="p-[10px]">
-			<div class="float-left text-dark-secondary font-IBMPlexSans pb-[10px]" on:keydown={() => {}}>
-				<img src={cover} class="w-[52px] h-[52px] inline" alt="Album Cover" />
-				<div class="pl-[10px] text-[18px] font-bold w-[150px] inline-block">
-					<p class="marquee">
-						<span>{currentAudio.title}</span>
-					</p>
+<div class="hidden">
+	{#if canPlay && playOnAdd}
+		{fetchMusic(_selectedSong)}
+	{/if}
+</div>
+
+<div
+	class="text-dark-secondary absolute bottom-0 w-[100vw] bg-dark-primary"
+	on:click={toggleExpand}
+	on:keydown={() => {}}
+	style="height: {height};"
+>
+	{#if expand}
+		<div class="h-[80vh] overflow-y-scroll">
+			{#each playlist as music}
+				<div
+					class="border-[1px] h-[40px]"
+					on:click={() => {
+						toggleExpand();
+						fetchMusic(music);
+					}}
+				>
+					{music.title}
 				</div>
-				<!-- <span class="text-[20px]">{formatTime(currentTime)}/{formatTime(duration)}</span> -->
-			</div>
-			<div class="float-right">
-				<button
-					class="p-[5px]"
-					on:click={() => {
-						toggleExpand();
-						previous();
-					}}
-				>
-					<Previous />
-				</button>
-				<button
-					class="p-[5px]"
-					on:click={() => {
-						toggleExpand();
-						if (player.paused) player.play();
-						else player.pause();
-					}}
-					>{#if player?.paused}<Play /> {:else} <Pause /> {/if}</button
-				>
-				<button
-					class="p-[5px]"
-					on:click={() => {
-						toggleExpand();
-						next();
-					}}><Next /></button
-				>
-			</div>
-			<input
-				type="range"
-				class="w-full"
-				value={currentTime}
-				on:change={handleSeeking}
-				min={0}
-				max={duration}
-			/>
+			{/each}
 		</div>
+	{/if}
+	<div class="p-[10px]">
+		<div class="float-left text-dark-secondary font-IBMPlexSans pb-[10px]" on:keydown={() => {}}>
+			<img src={cover} class="w-[52px] h-[52px] inline" alt="Album Cover" />
+			<div class="pl-[10px] text-[18px] font-bold w-[150px] inline-block">
+				<p class="marquee">
+					<span>{currentAudio.title}</span>
+				</p>
+			</div>
+			<!-- <span class="text-[20px]">{formatTime(currentTime)}/{formatTime(duration)}</span> -->
+		</div>
+		<div class="float-right">
+			<button
+				class="p-[5px]"
+				on:click={() => {
+					toggleExpand();
+					previous();
+				}}
+			>
+				<Previous />
+			</button>
+			<button
+				class="p-[5px]"
+				on:click={() => {
+					toggleExpand();
+					if (player.paused) player.play();
+					else player.pause();
+				}}
+				>{#if player?.paused}<Play /> {:else} <Pause /> {/if}</button
+			>
+			<button
+				class="p-[5px]"
+				on:click={() => {
+					toggleExpand();
+					next();
+				}}><Next /></button
+			>
+		</div>
+		<input
+			type="range"
+			class="w-full"
+			value={currentTime}
+			on:change={handleSeeking}
+			min={0}
+			max={duration}
+		/>
 	</div>
-{/if}
+</div>
 
 <audio
 	id="aud"
