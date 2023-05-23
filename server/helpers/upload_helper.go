@@ -120,7 +120,6 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		if err != nil {
 			log.Println(err)
 			musicMetaData = &defaultMusicValues{fileHeader.Filename[:strings.Index(fileHeader.Filename, ".")]}
-			return response.Build(errors.InternalServerError, nil)
 		}
 
 		title := musicMetaData.Title()
