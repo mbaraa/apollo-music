@@ -119,6 +119,7 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		musicMetaData, err := tag.ReadFrom(file)
 		if err != nil {
 			log.Println(err)
+			musicMetaData = &defaultMusicValues{fileHeader.Filename[:strings.Index(fileHeader.Filename, ".")]}
 			return response.Build(errors.InternalServerError, nil)
 		}
 
@@ -234,3 +235,38 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 
 	return response.Build(errors.None, nil)
 }
+
+// defaultMusicValues implements tag.Metadata for default music metadata values
+type defaultMusicValues struct {
+	title string
+}
+
+func (d *defaultMusicValues) Format() tag.Format { return tag.Format("") }
+
+func (d *defaultMusicValues) FileType() tag.FileType { return tag.FileType("") }
+
+func (d *defaultMusicValues) Title() string { return d.title }
+
+func (d *defaultMusicValues) Album() string { return "Unknown Album" }
+
+func (d *defaultMusicValues) Artist() string { return "Unknown Artist" }
+
+func (d *defaultMusicValues) AlbumArtist() string { return "Unknown Artist" }
+
+func (d *defaultMusicValues) Composer() string { return "Unknown Composer" }
+
+func (d *defaultMusicValues) Year() int { return 0 }
+
+func (d *defaultMusicValues) Genre() string { return "Unknown Genre" }
+
+func (d *defaultMusicValues) Track() (int, int) { return 0, 0 }
+
+func (d *defaultMusicValues) Disc() (int, int) { return 0, 0 }
+
+func (d *defaultMusicValues) Picture() *tag.Picture { return nil }
+
+func (d *defaultMusicValues) Lyrics() string { return "" }
+
+func (d *defaultMusicValues) Comment() string { return "" }
+
+func (d *defaultMusicValues) Raw() map[string]interface{} { return nil }
