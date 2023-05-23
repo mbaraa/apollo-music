@@ -3,14 +3,16 @@
 	import type { Music } from "$lib/entities";
 	import { translate } from "$lib/locale";
 	import { TranslationKeys } from "$lib/strings/keys";
-	import Requests from "$lib/utils/requests/Requests";
-	import { createEventDispatcher } from "svelte";
+	import { onMount } from "svelte";
 	import Next from "./Next.svelte";
 	import Pause from "./Pause.svelte";
 	import Play from "./Play.svelte";
 	import Previous from "./Previous.svelte";
 
 	export let playlist: Music[];
+	export let cover = "/favicon.ico";
+	export let playOnAdd = true;
+	export let shuffle = false;
 
 	let player: HTMLAudioElement;
 	let currentTime = 0;
@@ -50,6 +52,10 @@
 	}
 
 	function next() {
+		if (shuffle) {
+			random();
+			return;
+		}
 		let nextSongIndex =
 			(playlist.findIndex((m) => m.publicId === currentAudio.publicId) + 1) % playlist.length;
 		//while (!isPlayable(playlist[nextSongIndex].)) {
@@ -59,14 +65,21 @@
 	}
 
 	function previous() {
+		if (shuffle) {
+			random();
+			return;
+		}
 		let prevSongIndex =
 			(playlist.findIndex((m) => m.publicId === currentAudio.publicId) - 1) % playlist.length;
 		fetchMusic(playlist[prevSongIndex]);
 	}
 
 	function handleFinishedSong(event: Event) {
+		if (playlist.findIndex((m) => m.publicId === currentAudio.publicId) === playlist.length - 1) {
+			console.log("finished");
+			return;
+		}
 		next();
-		console.log("finished");
 	}
 
 	function random() {
@@ -109,6 +122,12 @@
 		currentAudio = music;
 		pageTitle = currentAudio.title + translate(TranslationKeys.TITLE_PLAYING_SUFFIX);
 	}
+
+	onMount(() => {
+		if (playOnAdd) {
+			fetchMusic(playlist[0]);
+		}
+	});
 </script>
 
 <svelte:head>
@@ -139,10 +158,10 @@
 		{/if}
 		<div class="p-[10px]">
 			<div class="float-left text-dark-secondary font-IBMPlexSans pb-[10px]" on:keydown={() => {}}>
-				<img src="/favicon.ico" class="w-[52px] h-[52px] inline" alt="Album Cover" />
-				<div class="pl-[10px] text-[18px] font-bold move-on-overflow inline-block">
-					<p>
-						{currentAudio.title}
+				<img src={cover} class="w-[52px] h-[52px] inline" alt="Album Cover" />
+				<div class="pl-[10px] text-[18px] font-bold w-[150px] inline-block">
+					<p class="marquee">
+						<span>{currentAudio.title}</span>
 					</p>
 				</div>
 				<!-- <span class="text-[20px]">{formatTime(currentTime)}/{formatTime(duration)}</span> -->
@@ -201,24 +220,25 @@
 />
 
 <style>
-	.move-on-overflow {
-		width: 150px;
-		overflow-x: scroll;
+	.marquee {
+		width: 100%;
+		margin: 0 auto;
 		white-space: nowrap;
+		overflow: hidden;
 	}
 
-	.move-on-overflow p {
-		animation-name: scroll;
-		animation-duration: 5s;
-		animation-iteration-count: infinite;
+	.marquee span {
+		display: inline-block;
+		padding-left: 100%;
+		animation: marquee 5s linear infinite;
 	}
 
-	@keyframes scroll {
+	@keyframes marquee {
 		0% {
-			transform: translateX(25%);
+			transform: translate(0, 0);
 		}
 		100% {
-			transform: translateX(-75%);
+			transform: translate(-100%, 0);
 		}
 	}
 </style>
