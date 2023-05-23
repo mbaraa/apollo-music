@@ -48,6 +48,7 @@ type MusicAlbum struct {
 	Year       string `json:"-"`
 	YearId     uint   `json:"-"`
 	Genre      string `json:"-"`
+	CoverB64   string `json:"-"`
 	GenreId    uint   `json:"-"`
 }
 

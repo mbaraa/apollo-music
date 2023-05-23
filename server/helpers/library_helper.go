@@ -145,6 +145,7 @@ func (m *LibraryHelper) GetAlbum(token, albumPublicId string) (entities.JSON, in
 		ArtistName: dbAlbum[0].ArtistName,
 		Year:       dbAlbum[0].Year,
 		Genre:      dbAlbum[0].Genre,
+		CoverB64:   dbAlbum[0].CoverB64,
 		Songs:      music,
 	})
 }
@@ -175,6 +176,7 @@ func (m *LibraryHelper) GetAlbums(token string) (entities.JSON, int) {
 			Title:      album.Title,
 			ArtistName: album.ArtistName,
 			Year:       album.Year,
+			CoverB64:   album.CoverB64,
 			Genre:      album.Genre,
 		})
 	}

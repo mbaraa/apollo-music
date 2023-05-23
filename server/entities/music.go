@@ -17,6 +17,7 @@ type MusicAlbum struct {
 	ArtistName string  `json:"artistName"`
 	Year       string  `json:"year"`
 	Genre      string  `json:"genre"`
+	CoverB64   string  `json:"coverB64"`
 	Songs      []Music `json:"songs"`
 }
 
