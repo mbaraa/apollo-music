@@ -6,11 +6,11 @@ export default {
 	theme: {
 		colors: {
 			dark: {
-				primary: "#273d50",
+				primary: "#051220",
 				secondary: "#fff",
 				accent: "#add8fb",
 				accent2: "#add8fb66",
-				neutral: "#051220"
+				neutral: "#273d50"
 			},
 			light: {},
 			...defaultTheme.colors
