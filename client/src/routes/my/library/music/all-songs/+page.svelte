@@ -2,22 +2,21 @@
 	import { translate } from "$lib/locale";
 	import { TranslationKeys } from "$lib/strings/keys";
 	import { onMount } from "svelte";
-	import type { Album, Music } from "$lib/entities";
+	import type { Music } from "$lib/entities";
 	import Requests from "$lib/utils/requests/Requests";
 	import Loading from "$lib/ui/Loading.svelte";
-	import Player from "$lib/components/Player/index.svelte";
 	import { page } from "$app/stores";
-	import { currentAlbumCover, playNow, playingQueue, songToPlay } from "../../../../../../store";
+	import { playNow, playingQueue, songToPlay } from "../../../../../store";
 	import MusicTile from "$lib/components/Music/MusicTile.svelte";
 
 	const albumPublicId = $page.params.publicId;
 
-	let album: Album;
+	$: songs = new Array<Music>();
 
 	async function playAlbum() {
-		album = await Requests.makeAuthRequest("GET", `library/album/${albumPublicId}`, null)
+		songs = await Requests.makeAuthRequest("GET", `library/album/${albumPublicId}`, null)
 			.then((resp) => resp.json())
-			.then((resp) => resp["data"])
+			.then((resp) => resp["data"]["songs"])
 			.catch((err) => {
 				console.error(err);
 			});
@@ -32,16 +31,15 @@
 </svelte:head>
 
 <main>
-	{#if album && album.songs}
+	{#if songs}
 		<div class="h-[85vh] overflow-y-scroll">
-			{#each album.songs as song}
+			{#each songs as song}
 				<button
 					class="block w-full"
 					on:click={() => {
 						playNow.set(true);
 						songToPlay.set(song);
-						playingQueue.set(album.songs);
-						currentAlbumCover.set(`data:image/*;base64,${album.coverB64}`);
+						playingQueue.set(songs);
 					}}
 				>
 					<MusicTile music={song} />

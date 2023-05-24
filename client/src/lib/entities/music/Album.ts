@@ -7,4 +7,5 @@ export default interface Album {
 	year: string;
 	genre: string;
 	songs: Music[];
+	coverB64: string;
 }
