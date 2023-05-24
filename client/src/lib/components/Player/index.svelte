@@ -187,7 +187,7 @@
 		<div class="float-left text-dark-secondary font-IBMPlexSans pb-[10px]" on:keydown={() => {}}>
 			<img src={cover} class="w-[52px] h-[52px] inline" alt="Album Cover" />
 			<div class="pl-[10px] text-[18px] font-bold w-[150px] inline-block">
-				<Marquee title={currentAudio.title} _class="w-[100%]" />
+				<Marquee title={currentAudio.title} _class="w-[100%] sm:w-[300px]" />
 			</div>
 			<!-- <span class="text-[20px]">{formatTime(currentTime)}/{formatTime(duration)}</span> -->
 		</div>

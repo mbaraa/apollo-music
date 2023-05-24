@@ -12,6 +12,6 @@
 			alt="cover"
 			class="inline-block w-[75px] h-[75px] rounded-[0px] mr-[5px]"
 		/>
-		<Marquee title={album.title} _class="text-[20px] w-[220px]" />
+		<Marquee title={album.title} _class="text-[20px] w-[220px] sm:w-[300px]" />
 	</div>
 {/if}

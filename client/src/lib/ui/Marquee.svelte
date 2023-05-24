@@ -8,16 +8,18 @@
 </p>
 
 <style>
-	.marquee {
-		margin: 0 auto;
-		white-space: nowrap;
-		overflow: hidden;
-	}
+	@media (max-width: 668px) {
+		.marquee {
+			margin: 0 auto;
+			white-space: nowrap;
+			overflow: hidden;
+		}
 
-	.marquee span {
-		display: inline-block;
-		padding-left: 100%;
-		animation: marquee 15s linear infinite;
+		.marquee span {
+			display: inline-block;
+			padding-left: 100%;
+			animation: marquee 15s linear infinite;
+		}
 	}
 
 	@keyframes marquee {
