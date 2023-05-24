@@ -20,7 +20,7 @@
 </script>
 
 <svelte:head>
-	<title>{translate(TranslationKeys.TITLE_LIBRARY)}</title>
+	<title>{translate(TranslationKeys.TITLE_LIBRARY_MUSIC_GENRERS)}</title>
 </svelte:head>
 
 <main>

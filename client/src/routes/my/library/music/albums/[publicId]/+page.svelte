@@ -28,7 +28,7 @@
 </script>
 
 <svelte:head>
-	<title>{translate(TranslationKeys.TITLE_LIBRARY)}</title>
+	<title>{`${album?.title} - ${translate(TranslationKeys.TITLE_LIBRARY_MUSIC_ALBUMS)}`}</title>
 </svelte:head>
 
 <main>

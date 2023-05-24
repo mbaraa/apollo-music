@@ -28,7 +28,7 @@
 </script>
 
 <svelte:head>
-	<title>{translate(TranslationKeys.TITLE_LIBRARY)}</title>
+	<title>{`${genre?.name} - ${translate(TranslationKeys.TITLE_LIBRARY_MUSIC_GENRERS)}`}</title>
 </svelte:head>
 
 <main>

@@ -9,14 +9,12 @@
 	import { playNow, playingQueue, songToPlay } from "../../../../../store";
 	import MusicTile from "$lib/components/Music/MusicTile.svelte";
 
-	const albumPublicId = $page.params.publicId;
-
 	$: songs = new Array<Music>();
 
 	async function playAlbum() {
-		songs = await Requests.makeAuthRequest("GET", `library/album/${albumPublicId}`, null)
+		songs = await Requests.makeAuthRequest("GET", `library/music`, null)
 			.then((resp) => resp.json())
-			.then((resp) => resp["data"]["songs"])
+			.then((resp) => resp["data"])
 			.catch((err) => {
 				console.error(err);
 			});
@@ -27,7 +25,7 @@
 </script>
 
 <svelte:head>
-	<title>{translate(TranslationKeys.TITLE_LIBRARY)}</title>
+	<title>{translate(TranslationKeys.TITLE_LIBRARY_MUSIC_SONGS)}</title>
 </svelte:head>
 
 <main>
