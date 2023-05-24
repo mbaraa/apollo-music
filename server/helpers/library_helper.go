@@ -220,6 +220,7 @@ func (m *LibraryHelper) GetArtist(token, artistPublicId string) (entities.JSON, 
 			Title:      album.Title,
 			ArtistName: album.ArtistName,
 			Year:       album.Year,
+			CoverB64:   album.CoverB64,
 			Genre:      album.Genre,
 		})
 	}

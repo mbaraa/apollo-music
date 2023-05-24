@@ -8,8 +8,9 @@ import (
 	"log"
 	"mime/multipart"
 	"os"
-	"strings"
 	"time"
+
+	gostrings "strings"
 
 	"github.com/dhowden/tag"
 
@@ -65,7 +66,7 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		return response.Build(errors.InvalidToken, nil)
 	}
 
-	if !strings.Contains(fileHeader.Header.Get("Content-Type"), "audio") {
+	if !gostrings.Contains(fileHeader.Header.Get("Content-Type"), "audio") {
 		return response.Build(errors.BadRequest, nil)
 	}
 
@@ -118,18 +119,34 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 	if audioType == enums.MusicType {
 		_, _ = file.Seek(0, 0)
 		musicMetaData, err := tag.ReadFrom(file)
+		defaultMetaData := &defaultMusicValues{fileHeader.Filename[:gostrings.Index(fileHeader.Filename, ".")]}
 		if err != nil {
 			log.Println(err)
-			musicMetaData = &defaultMusicValues{fileHeader.Filename[:strings.Index(fileHeader.Filename, ".")]}
+			musicMetaData = defaultMetaData
 		}
 
 		title := musicMetaData.Title()
+		if len(title) == 0 {
+			title = defaultMetaData.Title()
+		}
 		album := musicMetaData.Album()
+		if len(album) == 0 {
+			album = defaultMetaData.Album()
+		}
 		year := musicMetaData.Year()
+		if year == 0 {
+			year = defaultMetaData.Year()
+		}
 		genre := musicMetaData.Genre()
+		if len(genre) == 0 {
+			genre = defaultMetaData.Genre()
+		}
 		artist := musicMetaData.AlbumArtist()
 		if len(artist) == 0 {
 			artist = musicMetaData.Artist()
+			if len(artist) == 0 {
+				artist = defaultMetaData.Artist()
+			}
 		}
 		trackNumber, _ := musicMetaData.Track()
 
