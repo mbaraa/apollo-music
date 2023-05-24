@@ -13,12 +13,7 @@ var instance *gorm.DB = nil
 
 // GetDBConnector returns a singleton mysql connection instance to the application's DB
 func GetDBConnector() *gorm.DB {
-	return getDBConnector("apollo_music")
-}
-
-// GetTestDBConnector returns a singleton mysql connection instance to the application's test DB
-func GetTestDBConnector() *gorm.DB {
-	return getDBConnector("apollo_music_test").Debug()
+	return getDBConnector("apollo_music").Debug()
 }
 
 // getDBConnector returns a singleton mysql connection instance
@@ -33,7 +28,7 @@ func getDBConnector(dbName string) *gorm.DB {
 				panic(err)
 			}
 
-			err = database.Exec("CREATE DATABASE IF NOT EXISTS " + dbName + ";").Error
+			err = database.Exec("CREATE DATABASE IF NOT EXISTS " + dbName + ";").Debug().Error
 			if err != nil {
 				panic(err)
 			}
