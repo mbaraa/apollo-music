@@ -2,31 +2,28 @@
 	import { translate } from "$lib/locale";
 	import { TranslationKeys } from "$lib/strings/keys";
 	import { onMount } from "svelte";
-	import type { Album, Music } from "$lib/entities";
+	import type { Music } from "$lib/entities";
 	import Requests from "$lib/utils/requests/Requests";
 	import Loading from "$lib/ui/Loading.svelte";
-	import AlbumTile from "$lib/components/music/AlbumTile.svelte";
 	import Player from "$lib/components/Player/index.svelte";
+	import { page } from "$app/stores";
+	import { playNow, playingQueue, songToPlay } from "../../../../../../store";
+	import MusicTile from "$lib/components/Music/MusicTile.svelte";
 
-	let albums: Album[];
+	const albumPublicId = $page.params.publicId;
+
 	$: songs = new Array<Music>();
 
-	async function playAlbum(album: Album) {
-		songs = await Requests.makeAuthRequest("GET", `library/album/${album.publicId}`, null)
+	async function playAlbum() {
+		songs = await Requests.makeAuthRequest("GET", `library/album/${albumPublicId}`, null)
 			.then((resp) => resp.json())
 			.then((resp) => resp["data"]["songs"])
 			.catch((err) => {
 				console.error(err);
 			});
 	}
-
-	onMount(async () => {
-		albums = await Requests.makeAuthRequest("GET", "library/albums", null)
-			.then((resp) => resp.json())
-			.then((resp) => resp["data"])
-			.catch((err) => {
-				console.error(err);
-			});
+	onMount(() => {
+		playAlbum();
 	});
 </script>
 
@@ -35,15 +32,21 @@
 </svelte:head>
 
 <main>
-	{#if albums}
+	{#if songs}
 		<div class="h-[85vh] overflow-y-scroll">
-			{#each albums as album}
-				<div on:click={() => playAlbum(album)}>
-					<AlbumTile {album} />
-				</div>
+			{#each songs as song}
+				<button
+					class="block w-full"
+					on:click={() => {
+						playNow.set(true);
+						songToPlay.set(song);
+						playingQueue.set(songs);
+					}}
+				>
+					<MusicTile music={song} />
+				</button>
 			{/each}
 		</div>
-		<Player playlist={songs} on:playlistchange={() => {}} />
 	{:else}
 		<Loading />
 	{/if}

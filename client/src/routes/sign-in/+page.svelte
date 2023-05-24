@@ -29,7 +29,7 @@
 			})
 			.catch(() => false);
 
-		goto(validSession ? "/library" : "/sign-in");
+		goto(validSession ? "/my/library" : "/sign-in");
 	});
 </script>
 
@@ -62,11 +62,13 @@
 			required
 			_class="mt-[24px]"
 		/>
-		<Link
-			href="/forgot-password"
-			title={translate(TranslationKeys.SIGN_IN_FORGOT_PASSWORD)}
-			_class="float-right mt-[12px] mr-[35px] text-[16px]"
-		/>
+		<div class="w-[360px]">
+			<Link
+				href="/forgot-password"
+				title={translate(TranslationKeys.SIGN_IN_FORGOT_PASSWORD)}
+				_class="float-right mt-[12px] mr-[35px] text-[16px]"
+			/>
+		</div>
 
 		<input
 			type="submit"

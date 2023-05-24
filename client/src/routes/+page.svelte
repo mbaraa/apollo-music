@@ -12,7 +12,7 @@
 			})
 			.catch(() => false);
 
-		goto(validSession ? "/library" : "/sign-in");
+		goto(validSession ? "/my/library" : "/sign-in");
 	});
 </script>
 

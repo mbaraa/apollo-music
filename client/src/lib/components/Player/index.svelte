@@ -8,15 +8,38 @@
 	import Pause from "./Pause.svelte";
 	import Play from "./Play.svelte";
 	import Previous from "./Previous.svelte";
+	import {
+		playingQueue,
+		songToPlay,
+		currentAlbumCover,
+		playNow,
+		shuffleSongs
+	} from "../../../store";
 
-	export let playlist: Music[];
-	export let selectedSong: Music;
-	export let cover = "/favicon.ico";
-	export let playOnAdd = true;
-	export let shuffle = false;
+	let playlist: Music[];
+	let selectedSong: Music = {} as Music;
+	let cover = "/favicon.ico";
+	let playOnAdd = true;
+	let shuffle = false;
 
+	playingQueue.subscribe((queue) => {
+		playlist = queue;
+	});
+	songToPlay.subscribe((song) => {
+		selectedSong = song;
+	});
+	currentAlbumCover.subscribe((_cover) => {
+		cover = _cover;
+	});
+	playNow.subscribe((play) => {
+		playOnAdd = play;
+	});
+	shuffleSongs.subscribe((_shuffle) => {
+		shuffle = _shuffle;
+	});
+
+	/************************************/
 	$: canPlay = playlist !== null && playlist.length > 0;
-	$: _selectedSong = canPlay ? playlist[0] : selectedSong;
 
 	let player: HTMLAudioElement;
 	let currentTime = 0;
@@ -25,14 +48,14 @@
 
 	let pageTitle = translate(TranslationKeys.TITLE_LIBRARY);
 	let expand = false;
-	let height = "15vh";
+	let height = "100px";
 
 	function toggleExpand() {
 		expand = !expand;
 		if (expand) {
 			height = "100vh";
 		} else {
-			height = "15vh";
+			height = "100px";
 		}
 	}
 
@@ -134,7 +157,7 @@
 
 <div class="hidden">
 	{#if canPlay && playOnAdd}
-		{fetchMusic(_selectedSong)}
+		{fetchMusic(selectedSong)}
 	{/if}
 </div>
 
