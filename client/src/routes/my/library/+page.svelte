@@ -12,7 +12,7 @@
 		{ name: "Artists", icon: null, url: "/my/library/music/artists" },
 		{ name: "Genres", icon: null, url: "/my/library/music/genres" },
 		{ name: "Years", icon: null, url: "/my/library/music/years" },
-		{ name: "Playing Queue", icon: null, url: "/my/library/queue" },
+		//{ name: "Playing Queue", icon: null, url: "/my/library/queue" },
 		{ name: "Recently Added", icon: null, url: "/my/library/recently-added" },
 		{ name: "Upload", icon: null, url: "/my/library/upload" }
 	];
