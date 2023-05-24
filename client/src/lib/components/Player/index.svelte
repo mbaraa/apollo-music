@@ -15,6 +15,7 @@
 		playNow,
 		shuffleSongs
 	} from "../../../store";
+	import Marquee from "$lib/ui/Marquee.svelte";
 
 	let playlist: Music[];
 	let selectedSong: Music = {} as Music;
@@ -186,9 +187,7 @@
 		<div class="float-left text-dark-secondary font-IBMPlexSans pb-[10px]" on:keydown={() => {}}>
 			<img src={cover} class="w-[52px] h-[52px] inline" alt="Album Cover" />
 			<div class="pl-[10px] text-[18px] font-bold w-[150px] inline-block">
-				<p class="marquee">
-					<span>{currentAudio.title}</span>
-				</p>
+				<Marquee title={currentAudio.title} _class="w-[100%]" />
 			</div>
 			<!-- <span class="text-[20px]">{formatTime(currentTime)}/{formatTime(duration)}</span> -->
 		</div>
@@ -243,27 +242,3 @@
 		console.log("downloading...");
 	}}
 />
-
-<style>
-	.marquee {
-		width: 100%;
-		margin: 0 auto;
-		white-space: nowrap;
-		overflow: hidden;
-	}
-
-	.marquee span {
-		display: inline-block;
-		padding-left: 100%;
-		animation: marquee 5s linear infinite;
-	}
-
-	@keyframes marquee {
-		0% {
-			transform: translate(0, 0);
-		}
-		100% {
-			transform: translate(-100%, 0);
-		}
-	}
-</style>
