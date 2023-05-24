@@ -126,25 +126,22 @@ func (u *UploadHelper) UploadFile(token string, audioType enums.AudioType, fileH
 		}
 
 		title := musicMetaData.Title()
-		if len(title) == 0 {
+		if len(gostrings.TrimSpace(title)) == 0 {
 			title = defaultMetaData.Title()
 		}
 		album := musicMetaData.Album()
-		if len(album) == 0 {
+		if len(gostrings.TrimSpace(album)) == 0 {
 			album = defaultMetaData.Album()
 		}
 		year := musicMetaData.Year()
-		if year == 0 {
-			year = defaultMetaData.Year()
-		}
 		genre := musicMetaData.Genre()
-		if len(genre) == 0 {
+		if len(gostrings.TrimSpace(genre)) == 0 {
 			genre = defaultMetaData.Genre()
 		}
 		artist := musicMetaData.AlbumArtist()
-		if len(artist) == 0 {
+		if len(gostrings.TrimSpace(artist)) == 0 {
 			artist = musicMetaData.Artist()
-			if len(artist) == 0 {
+			if len(gostrings.TrimSpace(artist)) == 0 {
 				artist = defaultMetaData.Artist()
 			}
 		}
