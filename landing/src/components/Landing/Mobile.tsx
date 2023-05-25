@@ -13,7 +13,7 @@ export default function Mobile() {
       </div>
       <div className="absolute bottom-[40px] left-[50%] translate-x-[-50%]">
         <button
-          className="bg-dark-accent text-dark-neutral rounded-[20px] p-[13px] w-[228px] h-[54px] flex justify-between items-center"
+          className="bg-dark-secondary text-dark-neutral rounded-[20px] p-[13px] w-[228px] h-[54px] flex justify-between items-center"
           onClick={() => navigate("/intro")}
         >
           <span className="text-[17px]">Discover the Beat</span>{" "}

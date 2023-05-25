@@ -1,6 +1,8 @@
 package apis
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/mbaraa/apollo-music/entities"
 	"github.com/mbaraa/apollo-music/enums"
@@ -8,6 +10,8 @@ import (
 	"github.com/mbaraa/apollo-music/helpers"
 	"github.com/mbaraa/apollo-music/helpers/response"
 	"github.com/mbaraa/apollo-music/middlewares"
+	"github.com/stripe/stripe-go/v74"
+	"github.com/stripe/stripe-go/v74/checkout/session"
 )
 
 type SubscriptionApi struct {
@@ -28,9 +32,43 @@ func (s *SubscriptionApi) Bind(app *fiber.App) {
 	subscription.Use(middlewares.AllowJSON)
 	subscription.Use(middlewares.AllowCors)
 
+	subscription.Post("/sth", s.handleSomethingElse)
 	subscription.Get("/check", s.handleCheckSubscription)
 	subscription.Post("/start", s.handleStartSubscription)
 	subscription.Post("/cancel", s.handleCancelSubscription)
+}
+
+func (s *SubscriptionApi) handleSomethingElse(ctx *fiber.Ctx) error {
+	var req struct {
+		Plan enums.Plan `json:"plan"`
+	}
+
+	err := ctx.BodyParser(&req)
+	if err != nil {
+		return ctx.SendStatus(400)
+	}
+
+	params := &stripe.CheckoutSessionParams{
+		LineItems: []*stripe.CheckoutSessionLineItemParams{
+			{
+				Price:    stripe.String(req.Plan.PlanStripeProductId()),
+				Quantity: stripe.Int64(1),
+			},
+		},
+		Mode:       stripe.String("subscription"),
+		SuccessURL: stripe.String("http://localhost:5173/success"),
+		CancelURL:  stripe.String("http://localhost:5173/success"),
+	}
+	sess, err := session.New(params)
+	if err != nil {
+		return ctx.Status(500).SendString(err.Error())
+	}
+
+	fmt.Println("product", req.Plan.PlanStripeProductId())
+
+	return ctx.Status(200).JSON(map[string]any{
+		"url": sess.URL,
+	})
 }
 
 func (s *SubscriptionApi) handleCheckSubscription(ctx *fiber.Ctx) error {
