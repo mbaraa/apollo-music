@@ -11,12 +11,12 @@ export default function Mobile() {
           The Coolest Cloud Music Player!
         </h2>
       </div>
-      <div className="absolute bottom-[40px] left-[50%] translate-x-[-50%]">
+      <div className="absolute mt-[10%] left-[50%] translate-x-[-50%]">
         <button
           className="bg-dark-secondary text-dark-neutral rounded-[20px] p-[13px] w-[228px] h-[54px] flex justify-between items-center"
           onClick={() => navigate("/intro")}
         >
-          <span className="text-[17px]">Discover the Beat</span>{" "}
+          <span className="text-[17px] font-[600]">Discover the Beat</span>{" "}
           <img className="inline" src="/headset-icon.png" />
         </button>
       </div>
