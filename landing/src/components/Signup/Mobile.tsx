@@ -39,7 +39,9 @@ export default function Mobile() {
           Unlock a world of YOUR music with us!
         </h1>
         <img
-          className="mr-[-120px] mt-[-20px] w-[248px] h-[218px]"
+          width={248}
+          height={218}
+          className="mt-[-20px] w-[124px] h-[218px] object-cover object-left"
           src="/cassette.png"
         />
       </div>
