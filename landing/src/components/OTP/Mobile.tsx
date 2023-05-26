@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ResendEmail from "../../assets/ResendEmail.tsx";
 
 export default function OTP() {
   const navigate = useNavigate();
@@ -53,32 +54,36 @@ export default function OTP() {
       <h2 className="text-[20px] mt-[20px] ml-[30px]">
         Check your inbox for an OTP from us to unlock your music library.
       </h2>
-      <form onSubmit={handleSubmit} className="pt-[44px] ml-[30px]">
-        <input
-          type="text"
-          maxLength={6}
-          placeholder="XXXXXX"
-          required
-          value={verificationCode}
-          onChange={(e) => {
-            setVerificationCode(e.target.value);
-          }}
-          className="bg-dark-primary border-[2px] border-dark-accent rounded-l-[20px] p-[12px] w-[200px] font-[Comfortaa] text-center text-[20px]"
-        />
-        <input
-          type="submit"
-          value=" "
-          className="bg-dark-accent border-[2px] border-dark-accent rounded-r-[20px] p-[12px] font-[Comfortaa] text-center text-[20px] bg-[url('/verify-otp.png')] bg-no-repeat bg-center w-[50px] cursor-pointer hover:opacity-[0.9]"
-        />
-      </form>
-      <button
-        className="bg-dark-accent text-dark-neutral mt-[10px] ml-[30px] rounded-[20px] p-[13px] w-[130px] h-[34px] flex items-center text-center text-[16px]"
-        onClick={resendOtp}
-      >
-        Resend OTP
-      </button>
-      <div className="">
-        <img src="/email-image.png" />
+      <div className="absolute left-[50%] translate-x-[-50%] w-[330px]">
+        <form onSubmit={handleSubmit} className="pt-[44px]">
+          <input
+            type="text"
+            maxLength={6}
+            placeholder="XXXXXX"
+            required
+            value={verificationCode}
+            onChange={(e) => {
+              setVerificationCode(e.target.value);
+            }}
+            className="bg-dark-primary border-[2px] border-dark-accent rounded-l-[20px] p-[12px] w-[200px] font-[Comfortaa] text-center text-[20px]"
+          />
+          <input
+            type="submit"
+            value=" "
+            className="bg-dark-accent w-[50px] border-[2px] border-dark-accent rounded-r-[20px] p-[12px] font-[Comfortaa] text-center text-[20px] bg-[url('/verify-otp.svg')] bg-no-repeat bg-center cursor-pointer hover:opacity-[0.9]"
+          />
+          <button
+            className="bg-dark-accent ml-[10px] text-dark-neutral rounded-[20px] w-[70px] relative top-[-2px] h-[60px] text-[16px] inline-block"
+            title="Resend OTP"
+            onClick={resendOtp}
+          >
+            <ResendEmail color="#051220" width="40px" height="40px" />
+          </button>
+        </form>
+
+        <div className="pt-[20px]">
+          <img src="/email-image.png" />
+        </div>
       </div>
     </div>
   );
