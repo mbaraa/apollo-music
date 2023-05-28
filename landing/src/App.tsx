@@ -1,6 +1,4 @@
-import SelectPlan from "./components/SelectPlan";
 import Signup from "./components/Signup";
-import OTP from "./components/OTP";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Landing from "./components/Landing";
 import Cancel from "./components/Cancel";
@@ -11,11 +9,6 @@ function App() {
     { path: "/", element: <Landing /> },
     { path: "/intro", element: <Intro /> },
     { path: "/sign-up", element: <Signup /> },
-    { path: "/verify-otp", element: <OTP /> },
-    {
-      path: "/select-plan",
-      element: <SelectPlan />,
-    },
     { path: "/cancel", element: <Cancel /> },
   ]);
   return (

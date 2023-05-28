@@ -1,7 +1,7 @@
 import Desktop from "./Desktop";
 import Mobile from "./Mobile";
 
-export default function Landing() {
+export default function VerifyOtp() {
   return (
     <div>
       <div className="md:hidden">
