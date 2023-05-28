@@ -47,8 +47,10 @@ function UnderlyingPaidCheckoutForm({ plan, startSubscription }: Props) {
   return (
     <form onSubmit={handleSubmit} className="p-[10px] mt-[25px]">
       <PlanPreview plan={plan} />
-      <div className="mt-[10px]" />
-      <CardSection />
+      <div className="my-[10px]">
+        <span>Enter your card details:</span>
+        <CardSection />
+      </div>
       <input
         type="submit"
         className="bg-dark-accent text-dark-neutral w-full h-[48px] rounded-[20px] mt-[10px] text-[20px] cursor-pointer"
