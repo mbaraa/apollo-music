@@ -33,7 +33,7 @@
 
 <main>
 	{#if year && year.songs}
-		<div class="h-[85vh] overflow-y-scroll">
+		<div class="h-full">
 			{#each year.songs as song}
 				<button
 					class="block w-full"

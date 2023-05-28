@@ -33,7 +33,7 @@
 
 <main>
 	{#if albums}
-		<div class="h-[85vh] overflow-y-scroll">
+		<div class="h-full">
 			{#each albums as album}
 				<a href={`/my/library/music/albums/${album.publicId}`}>
 					<AlbumTile {album} />

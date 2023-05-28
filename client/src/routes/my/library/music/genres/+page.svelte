@@ -25,7 +25,7 @@
 
 <main>
 	{#if genres}
-		<div class="h-[85vh] overflow-y-scroll">
+		<div class="h-full">
 			{#each genres as genre}
 				<a href={`/my/library/music/genres/${genre.publicId}`}>
 					<GenreTile {genre} />

@@ -30,7 +30,7 @@
 
 <main>
 	{#if songs}
-		<div class="h-[85vh] overflow-y-scroll">
+		<div class="h-full">
 			{#each songs as song}
 				<button
 					class="block w-full"

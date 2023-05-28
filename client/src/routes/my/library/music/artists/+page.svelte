@@ -25,7 +25,7 @@
 
 <main>
 	{#if artists}
-		<div class="h-[85vh] overflow-y-scroll">
+		<div class="h-full">
 			{#each artists as artist}
 				<a href={`/my/library/music/artists/${artist.publicId}`}>
 					<ArtistTile {artist} />

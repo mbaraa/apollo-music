@@ -25,7 +25,7 @@
 
 <main>
 	{#if years}
-		<div class="h-[85vh] overflow-y-scroll">
+		<div class="h-full">
 			{#each years as year}
 				<a href={`/my/library/music/years/${year.publicId}`}>
 					<YearTile {year} />
