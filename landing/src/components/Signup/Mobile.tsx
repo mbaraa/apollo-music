@@ -4,31 +4,29 @@ import { useNavigate } from "react-router-dom";
 export default function Mobile() {
   const navigate = useNavigate();
   const [user, setUser] = useState({ fullName: "", email: "", password: "" });
-  const [confirmPassword, setConfirmPassword] = useState("");
 
   const signupUser = async () => {
-    if (user.password !== confirmPassword) {
-      window.alert("Passwords don't match!");
-    }
-
     await fetch(`${import.meta.env.VITE_BACKEND_ADDRESS}/auth/signup/email`, {
       method: "POST",
       mode: "cors",
       body: JSON.stringify(user),
     })
-      .then((resp) => resp.json())
-      .then((resp) => {
-        localStorage.setItem("otpToken", resp["data"]["token"]);
+      .then(async (resp) => {
+        const respBody = await resp.json();
+        if (!resp.ok) {
+          window.alert(respBody["errorMsg"]);
+          return;
+        }
+        localStorage.setItem("otpToken", respBody["data"]["token"]);
         navigate("/verify-otp");
       })
       .catch((err) => {
-        console.error(err);
+        window.alert(err);
       });
   };
 
   const handleSignup = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("hello");
     signupUser();
   };
 
@@ -80,17 +78,6 @@ export default function Mobile() {
             onChange={(e) => {
               user.password = e.target.value;
               setUser({ ...user });
-            }}
-          />
-          <input
-            className="block bg-dark-primary text-dark-secondary border-[2px] border-dark-accent rounded-[20px] p-[16px] h-[56px] w-[330px] mt-[20px]"
-            type="password"
-            minLength={8}
-            placeholder="Confirm Password"
-            required
-            value={confirmPassword}
-            onChange={(e) => {
-              setConfirmPassword(e.target.value);
             }}
           />
           <input
