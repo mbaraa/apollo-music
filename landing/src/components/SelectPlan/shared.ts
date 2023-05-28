@@ -52,11 +52,16 @@ export async function startSubscription(plan: IPlan, cardToken?: string) {
       Authorization: localStorage.getItem("checkoutToken") ?? "",
     },
   })
-    .then(() => {
+    .then(async (resp) => {
+      const respBody = await resp.json();
+      if (!resp.ok) {
+        window.alert(respBody["errorMsg"]);
+        return;
+      }
       localStorage.removeItem("checkoutToken");
       window.open("https://apollo-music.app/sign-in", "_self");
     })
     .catch((err) => {
-      console.error(err);
+      window.alert(err);
     });
 }

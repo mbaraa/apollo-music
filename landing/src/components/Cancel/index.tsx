@@ -14,10 +14,18 @@ export default function Cancel() {
         },
       }
     )
-      .then((resp) => {
-        return resp.ok;
+      .then(async (resp) => {
+        const respBody = await resp.json();
+        if (!resp.ok) {
+          window.alert(respBody["errorMsg"]);
+          return false;
+        }
+        return true;
       })
-      .catch(() => false);
+      .catch((err) => {
+        window.alert(err);
+        return false;
+      });
 
     if (validSessionToken) {
       await fetch(
@@ -30,12 +38,15 @@ export default function Cancel() {
           },
         }
       )
-        .then((resp) => resp.json())
-        .then((resp) => {
-          console.log(resp);
+        .then(async (resp) => {
+          if (!resp.ok) {
+            window.alert("Sad to see you go!");
+            return;
+          }
+          window.open("https://checkout.apollo-music.app", "_self");
         })
         .catch((err) => {
-          console.error(err);
+          window.alert(err);
         });
     }
   };

@@ -17,18 +17,18 @@ export default function OTP() {
         Authorization: localStorage.getItem("otpToken") ?? "",
       },
     })
-      .then((resp) => {
-        if (resp.ok) {
-          localStorage.removeItem("otpToken");
+      .then(async (resp) => {
+        const respBody = await resp.json();
+        if (!resp.ok) {
+          window.alert(respBody["errorMsg"]);
+          return;
         }
-        return resp.json();
-      })
-      .then((resp) => {
-        localStorage.setItem("checkoutToken", resp["data"]["token"]);
+        localStorage.setItem("checkoutToken", respBody["data"]["token"]);
+        localStorage.removeItem("otpToken");
         navigate("/select-plan");
       })
       .catch((err) => {
-        console.error(err);
+        window.alert(err);
       });
   };
 
