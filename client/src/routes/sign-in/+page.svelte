@@ -5,19 +5,22 @@
 	import { TranslationKeys } from "$lib/strings/keys";
 	import Input from "$lib/ui/Input.svelte";
 	import Link from "$lib/ui/Link.svelte";
+	import { showPopup } from "$lib/utils";
 	import Requests from "$lib/utils/requests/Requests";
 	import { onMount } from "svelte";
 	let user: User = { email: "", password: "" };
 
 	async function signin(): Promise<boolean> {
 		return await Requests.makeRequest("POST", "auth/signin/email", user)
-			.then((resp) => resp.json())
-			.then((resp) => {
-				if (resp["data"]["token"]) {
-					localStorage.setItem("token", resp["data"]["token"]);
-					return true;
+			.then(async (resp) => {
+				const respBody = await resp.json();
+				if (!resp.ok) {
+					showPopup(respBody["errorMsg"], "error");
+					return false;
 				}
-				return false;
+				showPopup("Yay, let's roll", "info");
+				localStorage.setItem("token", respBody["data"]["token"]);
+				return true;
 			})
 			.catch(() => false);
 	}
@@ -46,7 +49,7 @@
 		on:submit={async (e) => {
 			e.preventDefault();
 			const ok = await signin();
-			if (ok) goto("/library");
+			if (ok) goto("/my/library");
 		}}
 	>
 		<Input
