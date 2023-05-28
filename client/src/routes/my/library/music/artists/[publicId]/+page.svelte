@@ -7,7 +7,7 @@
 	import Loading from "$lib/ui/Loading.svelte";
 	import Player from "$lib/components/Player/index.svelte";
 	import { page } from "$app/stores";
-	import { playNow, playingQueue, songToPlay } from "../../../../../../store";
+	import { playNow, playingQueue, songToPlay } from "$lib/store";
 	import MusicTile from "$lib/components/Music/MusicTile.svelte";
 	import AlbumTile from "$lib/components/Music/AlbumTile.svelte";
 

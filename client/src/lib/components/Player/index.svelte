@@ -8,13 +8,7 @@
 	import Pause from "./Pause.svelte";
 	import Play from "./Play.svelte";
 	import Previous from "./Previous.svelte";
-	import {
-		playingQueue,
-		songToPlay,
-		currentAlbumCover,
-		playNow,
-		shuffleSongs
-	} from "../../../store";
+	import { playingQueue, songToPlay, currentAlbumCover, playNow, shuffleSongs } from "$lib/store";
 	import Marquee from "$lib/ui/Marquee.svelte";
 
 	let playlist: Music[];

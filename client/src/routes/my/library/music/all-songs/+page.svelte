@@ -6,7 +6,7 @@
 	import Requests from "$lib/utils/requests/Requests";
 	import Loading from "$lib/ui/Loading.svelte";
 	import { page } from "$app/stores";
-	import { playNow, playingQueue, songToPlay } from "../../../../../store";
+	import { playNow, playingQueue, songToPlay } from "$lib/store";
 	import MusicTile from "$lib/components/Music/MusicTile.svelte";
 
 	$: songs = new Array<Music>();
