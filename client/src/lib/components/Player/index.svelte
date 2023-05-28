@@ -157,10 +157,10 @@
 </div>
 
 <div
-	class="text-dark-secondary absolute bottom-0 w-[100vw] bg-dark-primary"
+	class="text-dark-secondary w-[100vw] bg-dark-neutral"
 	on:click={toggleExpand}
 	on:keydown={() => {}}
-	style="height: {height};"
+	style="height: {height}; position: {expand ? 'absolute' : 'inherit'}; bottom: 0;"
 >
 	{#if expand}
 		<div class="h-[80vh] overflow-y-scroll">
