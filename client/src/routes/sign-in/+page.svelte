@@ -44,42 +44,44 @@
 	<h1 class="font-[Comfortaa] pt-[32px] px-[35px] w-full font-[500] text-[30px]">
 		{translate(TranslationKeys.SIGN_IN_HEADER)}
 	</h1>
-	<form
-		class="pt-[66px] pl-[35px]"
-		on:submit={async (e) => {
-			e.preventDefault();
-			const ok = await signin();
-			if (ok) goto("/my/library");
-		}}
-	>
-		<Input
-			type="email"
-			bind:value={user.email}
-			placeholder={translate(TranslationKeys.SIGN_IN_EMAIL)}
-			required
-		/>
-		<Input
-			type="password"
-			bind:value={user.password}
-			placeholder={translate(TranslationKeys.SIGN_IN_PASSWORD)}
-			required
-			_class="mt-[24px]"
-		/>
-		<div class="w-[360px]">
-			<Link
-				href="/forgot-password"
-				title={translate(TranslationKeys.SIGN_IN_FORGOT_PASSWORD)}
-				_class="float-right mt-[12px] mr-[35px] text-[16px]"
-			/>
-		</div>
 
-		<input
-			type="submit"
-			class="bg-dark-accent text-dark-neutral w-[330px] h-[48px] rounded-[20px] mt-[44px] text-[24px] font-IBMPlexSans cursor-pointer"
-			value={translate(TranslationKeys.SIGN_IN_BUTTON)}
-		/>
-	</form>
-	<div>
+	<div class="absolute left-[50%] translate-x-[-50%]">
+		<form
+			class="pt-[66px]"
+			on:submit={async (e) => {
+				e.preventDefault();
+				const ok = await signin();
+				if (ok) goto("/my/library");
+			}}
+		>
+			<Input
+				type="email"
+				bind:value={user.email}
+				placeholder={translate(TranslationKeys.SIGN_IN_EMAIL)}
+				required
+			/>
+			<Input
+				type="password"
+				bind:value={user.password}
+				placeholder={translate(TranslationKeys.SIGN_IN_PASSWORD)}
+				required
+				_class="mt-[24px]"
+			/>
+			<div class="w-[360px]">
+				<Link
+					href="/forgot-password"
+					title={translate(TranslationKeys.SIGN_IN_FORGOT_PASSWORD)}
+					_class="float-right mt-[12px] mr-[35px] text-[16px]"
+				/>
+			</div>
+
+			<input
+				type="submit"
+				class="bg-dark-accent text-dark-neutral w-[330px] h-[48px] rounded-[20px] mt-[44px] text-[24px] font-IBMPlexSans cursor-pointer"
+				value={translate(TranslationKeys.SIGN_IN_BUTTON)}
+			/>
+		</form>
+
 		<h3 class="font-IBMPlexSans text-dark-secondary text-[18px] w-full text-center mt-[30px]">
 			{translate(TranslationKeys.SIGN_IN_SIGN_UP)}
 			<Link
