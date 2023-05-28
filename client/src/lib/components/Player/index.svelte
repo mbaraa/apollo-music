@@ -234,3 +234,12 @@
 		console.log("downloading...");
 	}}
 />
+
+<style>
+	progress::-moz-progress-bar {
+		background: #9cc7ea;
+	}
+	progress::-webkit-progress-value {
+		background: #9cc7ea;
+	}
+</style>
