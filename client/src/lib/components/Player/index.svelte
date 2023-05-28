@@ -43,14 +43,14 @@
 
 	let pageTitle = translate(TranslationKeys.TITLE_LIBRARY);
 	let expand = false;
-	let height = "100px";
+	let height = "75px";
 
 	function toggleExpand() {
 		expand = !expand;
 		if (expand) {
 			height = "100vh";
 		} else {
-			height = "100px";
+			height = "75px";
 		}
 	}
 
@@ -177,49 +177,47 @@
 			{/each}
 		</div>
 	{/if}
-	<div class="p-[10px]">
-		<div class="float-left text-dark-secondary font-IBMPlexSans pb-[10px]" on:keydown={() => {}}>
-			<img src={cover} class="w-[52px] h-[52px] inline" alt="Album Cover" />
-			<div class="pl-[10px] text-[18px] font-bold w-[150px] inline-block">
-				<Marquee title={currentAudio.title} _class="w-[100%] sm:w-[300px]" />
+	<div class="">
+		<div class="p-[10px] px-[25px] flex justify-between items-center">
+			<div
+				class="float-left text-dark-secondary font-IBMPlexSans pb-[10px] flex items-center"
+				on:keydown={() => {}}
+			>
+				<img src={cover} class="rounded-[5px] w-[52px] h-[52px] inline" alt="Album Cover" />
+				<div class="pl-[10px] text-[18px] font-bold w-[150px] inline-block">
+					<Marquee title={currentAudio.title} _class="w-[100%] sm:w-[300px]" />
+				</div>
 			</div>
-			<!-- <span class="text-[20px]">{formatTime(currentTime)}/{formatTime(duration)}</span> -->
+			<div class="text-dark-secondary mb-[10px]">
+				<button
+					class="p-[5px]"
+					on:click={() => {
+						toggleExpand();
+						previous();
+					}}
+				>
+					<Previous />
+				</button>
+				<button
+					class="p-[5px]"
+					on:click={() => {
+						toggleExpand();
+						if (player.paused) player.play();
+						else player.pause();
+					}}
+					>{#if player?.paused}<Play /> {:else} <Pause /> {/if}</button
+				>
+				<button
+					class="p-[5px]"
+					on:click={() => {
+						toggleExpand();
+						next();
+					}}><Next /></button
+				>
+			</div>
 		</div>
-		<div class="float-right">
-			<button
-				class="p-[5px]"
-				on:click={() => {
-					toggleExpand();
-					previous();
-				}}
-			>
-				<Previous />
-			</button>
-			<button
-				class="p-[5px]"
-				on:click={() => {
-					toggleExpand();
-					if (player.paused) player.play();
-					else player.pause();
-				}}
-				>{#if player?.paused}<Play /> {:else} <Pause /> {/if}</button
-			>
-			<button
-				class="p-[5px]"
-				on:click={() => {
-					toggleExpand();
-					next();
-				}}><Next /></button
-			>
-		</div>
-		<input
-			type="range"
-			class="w-full"
-			value={currentTime}
-			on:change={handleSeeking}
-			min={0}
-			max={duration}
-		/>
+
+		<progress max={duration} value={currentTime} class="w-full h-[5px] absolute bottom-[0] p-0" />
 	</div>
 </div>
 
