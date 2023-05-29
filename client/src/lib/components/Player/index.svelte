@@ -48,7 +48,7 @@
 	function toggleExpand() {
 		expand = !expand;
 		if (expand) {
-			height = "100vh";
+			height = "85vh";
 		} else {
 			height = "75px";
 		}
@@ -160,7 +160,9 @@
 	class="text-dark-secondary w-[100vw] bg-dark-neutral"
 	on:click={toggleExpand}
 	on:keydown={() => {}}
-	style="height: {height}; position: {expand ? 'absolute' : 'inherit'}; bottom: 0;"
+	style="height: {height}; position: {expand ? 'absolute' : 'inherit'}; bottom: {expand
+		? '60px'
+		: '0'};"
 >
 	{#if expand}
 		<div class="h-[80vh] overflow-y-scroll">
@@ -176,49 +178,50 @@
 				</div>
 			{/each}
 		</div>
-	{/if}
-	<div class="">
-		<div class="p-[10px] px-[25px] flex justify-between items-center">
-			<div
-				class="float-left text-dark-secondary font-IBMPlexSans pb-[10px] flex items-center"
-				on:keydown={() => {}}
-			>
-				<img src={cover} class="rounded-[5px] w-[52px] h-[52px] inline" alt="Album Cover" />
-				<div class="pl-[10px] text-[18px] font-bold w-[150px] inline-block">
-					<Marquee title={currentAudio.title} _class="w-[100%] sm:w-[300px]" />
+	{:else}
+		<div class="">
+			<div class="p-[10px] px-[25px] flex justify-between items-center">
+				<div
+					class="float-left text-dark-secondary font-IBMPlexSans pb-[10px] flex items-center"
+					on:keydown={() => {}}
+				>
+					<img src={cover} class="rounded-[5px] w-[52px] h-[52px] inline" alt="Album Cover" />
+					<div class="pl-[10px] text-[18px] font-bold w-[150px] inline-block">
+						<Marquee title={currentAudio.title} _class="w-[100%] sm:w-[300px]" />
+					</div>
+				</div>
+				<div class="text-dark-secondary mb-[10px]">
+					<button
+						class="p-[5px]"
+						on:click={() => {
+							toggleExpand();
+							previous();
+						}}
+					>
+						<Previous />
+					</button>
+					<button
+						class="p-[5px]"
+						on:click={() => {
+							toggleExpand();
+							if (player.paused) player.play();
+							else player.pause();
+						}}
+						>{#if player?.paused}<Play /> {:else} <Pause /> {/if}</button
+					>
+					<button
+						class="p-[5px]"
+						on:click={() => {
+							toggleExpand();
+							next();
+						}}><Next /></button
+					>
 				</div>
 			</div>
-			<div class="text-dark-secondary mb-[10px]">
-				<button
-					class="p-[5px]"
-					on:click={() => {
-						toggleExpand();
-						previous();
-					}}
-				>
-					<Previous />
-				</button>
-				<button
-					class="p-[5px]"
-					on:click={() => {
-						toggleExpand();
-						if (player.paused) player.play();
-						else player.pause();
-					}}
-					>{#if player?.paused}<Play /> {:else} <Pause /> {/if}</button
-				>
-				<button
-					class="p-[5px]"
-					on:click={() => {
-						toggleExpand();
-						next();
-					}}><Next /></button
-				>
-			</div>
-		</div>
 
-		<progress max={duration} value={currentTime} class="w-full h-[5px] absolute bottom-[0] p-0" />
-	</div>
+			<progress max={duration} value={currentTime} class="w-full h-[5px] absolute bottom-[0] p-0" />
+		</div>
+	{/if}
 </div>
 
 <audio
