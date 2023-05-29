@@ -33,7 +33,7 @@
 
 <main>
 	{#if album && album.songs}
-		<div class="h-full">
+		<div class="h-full text-dark-secondary">
 			{#each album.songs as song}
 				<button
 					class="block w-full"

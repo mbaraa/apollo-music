@@ -52,7 +52,7 @@
 		{translate(TranslationKeys.LIBRARY_HEAD)}
 	</h1>
 
-	<nav>
+	<nav class="border-b-[1px] border-b-dark-neutral">
 		{#key path}
 			<ul
 				class="m-0 list-none flex justify-between items-center gap-[20px] pb-[20px] px-[25px] w-full overflow-x-scroll"
