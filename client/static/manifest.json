@@ -27,8 +27,22 @@
 			"name": "Albums",
 			"short_name": "Albums",
 			"description": "View albums",
-			"url": "/library/music/albums",
-			"icons": [{ "src": "favicon-32x32.png", "sizes": "32x32" }]
+			"url": "/my/library/music/albums",
+			"icons": [{ "src": "/favicon-32x32.png", "sizes": "32x32" }]
+		},
+		{
+			"name": "Artists",
+			"short_name": "Artists",
+			"description": "View artists",
+			"url": "/my/library/music/aritsts",
+			"icons": [{ "src": "/favicon-32x32.png", "sizes": "32x32" }]
+		},
+		{
+			"name": "Favorites",
+			"short_name": "Favorites",
+			"description": "View favorites",
+			"url": "/my/library/music/favorites",
+			"icons": [{ "src": "/favicon-32x32.png", "sizes": "32x32" }]
 		}
 	],
 	"description": "Apollo Music, the coolest cloud music player!"
