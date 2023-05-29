@@ -30,7 +30,16 @@ const en: TranslationValues = {
 	[TranslationKeys.FORGOT_PASSWORD_EMAIL]: "Email",
 	[TranslationKeys.FORGOT_PASSWORD_BUTTON]: "Reset password",
 	[TranslationKeys.PASSWORD_RESET_NEW_PASSWORD]: "Enter your new password",
-	[TranslationKeys.PASSWORD_RESET_UPDATE_BUTTON]: "Update password"
+	[TranslationKeys.PASSWORD_RESET_UPDATE_BUTTON]: "Update password",
+	[TranslationKeys.LIBRARY_HEAD]: "Apollo Library",
+	[TranslationKeys.LIBRARY_NAV_ALBUMS]: "Albums",
+	[TranslationKeys.LIBRARY_NAV_ARTISTS]: "Artists",
+	[TranslationKeys.LIBRARY_NAV_ALL_SONGS]: "All Songs",
+	[TranslationKeys.LIBRARY_NAV_FAVORITES]: "Favorites",
+	[TranslationKeys.LIBRARY_NAV_PLAYLISTS]: "Playlists",
+	[TranslationKeys.LIBRARY_NAV_YEARS]: "Years",
+	[TranslationKeys.LIBRARY_NAV_GENRES]: "Genres",
+	[TranslationKeys.LIBRARY_NAV_UPLOAD]: "Upload"
 };
 
 export default en;
