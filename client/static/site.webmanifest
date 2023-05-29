@@ -25,7 +25,7 @@
 			"name": "Artists",
 			"short_name": "Artists",
 			"description": "View artists",
-			"url": "/my/library/music/aritsts",
+			"url": "/my/library/music/artists",
 			"icons": [{ "src": "/favicon-32x32.png", "sizes": "32x32" }]
 		},
 		{
