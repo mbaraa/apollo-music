@@ -8,7 +8,7 @@
 </script>
 
 <div bind:offsetHeight={innerHeight} class="absolute z-[-1] h-[100vh]" />
-<div style="height: {slotHeight}px;" class="overflow-y-scroll">
+<div style="height: {slotHeight}px;" class="overflow-y-scroll bg-dark-primary">
 	<slot />
 </div>
 <div bind:offsetHeight={othersHeight}>

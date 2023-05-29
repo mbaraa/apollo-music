@@ -5,7 +5,7 @@
 </script>
 
 <a href={url}>
-	<div class="p-[20px] font-Comfortaa">
+	<div class="font-Comfortaa">
 		<img src="/favicon.ico" alt="icon" class="inline-block" />
 		<h1 class="inline-block pl-[10px] text-[20px]">{name}</h1>
 	</div>

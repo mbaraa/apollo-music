@@ -1,4 +1,5 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
+const plugin = require("tailwindcss/plugin");
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -22,5 +23,9 @@ export default {
 			}
 		}
 	},
-	plugins: []
+	plugins: [
+		plugin(function ({ addVariant }) {
+			addVariant("current", "&.active");
+		})
+	]
 };
