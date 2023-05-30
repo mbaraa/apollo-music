@@ -49,7 +49,10 @@ export default function Mobile() {
           </div>
 
           <div className="absolute left-[50%] translate-x-[-50%]">
-            <form onSubmit={handleSignup} className="pt-[20px]">
+            <form
+              onSubmit={handleSignup}
+              className="pt-[20px] font-IBMPlexSans"
+            >
               <input
                 className="block bg-dark-primary text-dark-secondary border-[2px] border-dark-accent rounded-[20px] p-[16px] h-[56px] w-[330px]"
                 type="text"
