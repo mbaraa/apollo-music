@@ -150,7 +150,7 @@ func (m *LibraryHelper) GetAlbum(token, albumPublicId string) (entities.JSON, in
 	})
 }
 
-func (m *LibraryHelper) GetAlbums(token string) (entities.JSON, int) {
+func (m *LibraryHelper) GetAlbums(token string, fetchCovers bool) (entities.JSON, int) {
 	claims, err := m.jwtUtil.Decode(token, jwt.SessionToken)
 	if err != nil {
 		log.Println(err)
@@ -171,14 +171,17 @@ func (m *LibraryHelper) GetAlbums(token string) (entities.JSON, int) {
 
 	albums := make([]entities.MusicAlbum, 0)
 	for _, album := range dbAlbums {
-		albums = append(albums, entities.MusicAlbum{
+		eAlbum := entities.MusicAlbum{
 			PublicId:   album.PublicId,
 			Title:      album.Title,
 			ArtistName: album.ArtistName,
 			Year:       album.Year,
-			CoverB64:   album.CoverB64,
 			Genre:      album.Genre,
-		})
+		}
+		if fetchCovers {
+			eAlbum.CoverB64 = album.CoverB64
+		}
+		albums = append(albums, eAlbum)
 	}
 
 	sort.Slice(albums, func(i, j int) bool {

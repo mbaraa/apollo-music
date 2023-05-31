@@ -30,6 +30,7 @@ func (l *LibraryApi) Bind(app *fiber.App) {
 
 	library.Get("/music", l.handleGetMusic)
 	library.Get("/album/:publicId", l.handleGetAlbum)
+	// quary param fetch-covers:bool
 	library.Get("/albums", l.handleGetAlbums)
 	library.Get("/artist/:publicId", l.handleGetArtist)
 	library.Get("/artists", l.handleGetArtists)
@@ -72,16 +73,17 @@ func (l *LibraryApi) handleGetAlbum(ctx *fiber.Ctx) error {
 
 func (l *LibraryApi) handleGetAlbums(ctx *fiber.Ctx) error {
 	var (
-		resp   entities.JSON
-		status int
-		token  = ctx.Get("Authorization")
+		resp        entities.JSON
+		status      int
+		token       = ctx.Get("Authorization")
+		fetchCovers = ctx.Query("fetch-covers") == "true"
 	)
 	if len(token) == 0 {
 		resp, status = response.Build(errors.BadRequest, nil)
 		return ctx.Status(status).JSON(resp)
 	}
 
-	resp, status = l.musicHelper.GetAlbums(token)
+	resp, status = l.musicHelper.GetAlbums(token, fetchCovers)
 	return ctx.Status(status).JSON(resp)
 }
 
