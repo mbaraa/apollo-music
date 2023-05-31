@@ -3,13 +3,16 @@
 	import type { Music } from "$lib/entities";
 	import { translate } from "$lib/locale";
 	import { TranslationKeys } from "$lib/strings/keys";
-	import { onMount } from "svelte";
 	import Next from "./Next.svelte";
 	import Pause from "./Pause.svelte";
 	import Play from "./Play.svelte";
 	import Previous from "./Previous.svelte";
 	import { playingQueue, songToPlay, currentAlbumCover, playNow, shuffleSongs } from "$lib/store";
 	import Marquee from "$lib/ui/Marquee.svelte";
+	import ArrowDown from "./ArrowDown.svelte";
+	import ArrowUp from "./ArrowUp.svelte";
+	import Menu from "./Menu.svelte";
+	import postcss from "postcss";
 
 	let playlist: Music[];
 	let selectedSong: Music = {} as Music;
@@ -158,25 +161,31 @@
 
 <div
 	class="text-dark-secondary w-[100vw] bg-dark-neutral"
-	on:click={toggleExpand}
-	on:keydown={() => {}}
 	style="height: {height}; position: {expand ? 'absolute' : 'inherit'}; bottom: {expand
 		? '60px'
 		: '0'};"
 >
 	{#if expand}
-		<div class="h-[80vh] overflow-y-scroll">
-			{#each playlist as music}
-				<div
-					class="border-[1px] h-[40px]"
-					on:click={() => {
-						toggleExpand();
-						fetchMusic(music);
-					}}
-				>
-					{music.title}
+		<div class="h-full w-full">
+			<div class="flex justify-between items-center px-10 p-5">
+				<button class="text-dark-accent p-1.5" on:click={toggleExpand}><ArrowDown /></button>
+				<h1 class="font-IBMPlexSans text-xl font-medium">
+					{translate(TranslationKeys.PLAYER_NOW_PLAYING)}
+				</h1>
+				<button class="text-dark-accent p-1.5" on:click={toggleExpand}>
+					<Menu />
+				</button>
+			</div>
+			<div class="flex w-full items-center justify-center flex-col">
+				<div class="w-[80%] h-[80%]">
+					<img src={cover} class="w-full h-full" alt="Album Cover" />
 				</div>
-			{/each}
+				<div>
+					<div>details and seek</div>
+					<div>controls</div>
+					<div>queue</div>
+				</div>
+			</div>
 		</div>
 	{:else}
 		<div class="">
@@ -194,7 +203,6 @@
 					<button
 						class="p-[5px]"
 						on:click={() => {
-							toggleExpand();
 							previous();
 						}}
 					>
@@ -203,7 +211,6 @@
 					<button
 						class="p-[5px]"
 						on:click={() => {
-							toggleExpand();
 							if (player.paused) player.play();
 							else player.pause();
 						}}
@@ -212,9 +219,14 @@
 					<button
 						class="p-[5px]"
 						on:click={() => {
-							toggleExpand();
 							next();
 						}}><Next /></button
+					>
+					<button
+						class="p-[5px] text-dark-accent"
+						on:click={() => {
+							toggleExpand();
+						}}><ArrowUp /></button
 					>
 				</div>
 			</div>
@@ -238,10 +250,15 @@
 	}}
 />
 
-<style>
+<style lang="postcss" scoped>
+	.container {
+		@apply bg-[#ff9922];
+	}
+
 	progress::-moz-progress-bar {
 		background: #9cc7ea;
 	}
+
 	progress::-webkit-progress-value {
 		background: #9cc7ea;
 	}
