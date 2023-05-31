@@ -33,12 +33,18 @@
 
 <main>
 	{#if albums}
-		<div class="h-full">
-			{#each albums as album}
-				<a href={`/my/library/music/albums/${album.publicId}`}>
-					<AlbumTile {album} />
-				</a>
-			{/each}
+		<div class="px-[25px] font-IBMPlexSans text-dark-secondary">
+			<h1 class="py-[15px] text-[24px]">
+				{albums.length}
+				{translate(TranslationKeys.LIBRARY_NAV_ALBUMS)}
+			</h1>
+			<div class="h-full grid grid-cols-2 gap-x-[16px] gap-y-[32px]">
+				{#each albums as album}
+					<a href={`/my/library/music/albums/${album.publicId}`}>
+						<AlbumTile {album} />
+					</a>
+				{/each}
+			</div>
 		</div>
 	{:else}
 		<Loading />

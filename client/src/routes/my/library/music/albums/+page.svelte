@@ -55,7 +55,7 @@
 					{albums.length}
 					{translate(TranslationKeys.LIBRARY_NAV_ALBUMS)}
 				</h1>
-				<div class="h-full grid grid-cols-2 gap-[15px]">
+				<div class="h-full grid grid-cols-2 gap-x-[16px] gap-y-[32px]">
 					{#each albums as album}
 						<a href={`/my/library/music/albums/${album.publicId}`}>
 							<AlbumTile {album} />

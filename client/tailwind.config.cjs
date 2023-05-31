@@ -5,6 +5,9 @@ const plugin = require("tailwindcss/plugin");
 export default {
 	content: ["./src/**/*.{html,js,svelte,ts}"],
 	theme: {
+		container: {
+			center: true
+		},
 		colors: {
 			dark: {
 				primary: "#051220",
