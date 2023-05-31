@@ -39,7 +39,8 @@ const en: TranslationValues = {
 	[TranslationKeys.LIBRARY_NAV_PLAYLISTS]: "Playlists",
 	[TranslationKeys.LIBRARY_NAV_YEARS]: "Years",
 	[TranslationKeys.LIBRARY_NAV_GENRES]: "Genres",
-	[TranslationKeys.LIBRARY_NAV_UPLOAD]: "Upload"
+	[TranslationKeys.LIBRARY_NAV_UPLOAD]: "Upload",
+	[TranslationKeys.PLAYER_NOW_PLAYING]: "Now Playing"
 };
 
 export default en;

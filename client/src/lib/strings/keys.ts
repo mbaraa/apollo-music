@@ -42,7 +42,11 @@ export enum TranslationKeys {
 	LIBRARY_NAV_PLAYLISTS = "LIBRARY_NAV_PLAYLISTS",
 	LIBRARY_NAV_YEARS = "LIBRARY_NAV_YEARS",
 	LIBRARY_NAV_GENRES = "LIBRARY_NAV_GENRES",
-	LIBRARY_NAV_UPLOAD = "LIBRARY_NAV_UPLOAD"
+	LIBRARY_NAV_UPLOAD = "LIBRARY_NAV_UPLOAD",
+
+	PLAYER_NOW_PLAYING = "PLAYER_NOW_PLAYING"
 }
 
-export type TranslationValues = { [key in TranslationKeys]: string };
+export type TranslationValues = {
+	[key in TranslationKeys]: string;
+};
