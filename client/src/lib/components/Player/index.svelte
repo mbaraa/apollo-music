@@ -13,6 +13,8 @@
 	import ArrowUp from "./ArrowUp.svelte";
 	import Menu from "./Menu.svelte";
 	import postcss from "postcss";
+	import Shuffle from "./Shuffle.svelte";
+	import Repeat from "./Repeat.svelte";
 
 	let playlist: Music[];
 	let selectedSong: Music = {} as Music;
@@ -37,20 +39,23 @@
 	});
 
 	/************************************/
-	$: canPlay = playlist !== null && playlist.length > 0;
+	$: canPlay = playlist !== null && playlist.length > 0 && currentTime !== undefined;
 
 	let player: HTMLAudioElement;
 	let currentTime = 0;
 	let duration = 0;
 	let currentAudio: Music = { title: "Play Queue is Empty" } as Music;
+	let paused = true;
 
 	let pageTitle = translate(TranslationKeys.TITLE_LIBRARY);
 	let expand = false;
 	let height = "75px";
 
 	function toggleExpand() {
+		if (!canPlay) return;
 		expand = !expand;
 		if (expand) {
+			playNow.set(false);
 			height = "85vh";
 		} else {
 			height = "75px";
@@ -99,6 +104,12 @@
 		fetchMusic(playlist[prevSongIndex]);
 	}
 
+	function togglePlayPause() {
+		paused = !paused;
+		if (player.paused) player.play();
+		else player.pause();
+	}
+
 	function handleFinishedSong(event: Event) {
 		if (playlist.findIndex((m) => m.publicId === currentAudio.publicId) === playlist.length - 1) {
 			console.log("finished");
@@ -122,7 +133,7 @@
 	}
 
 	function formatNumber(m: number): string {
-		return (m > 10 ? "" : "0") + m.toString();
+		return (m >= 10 ? "" : "0") + m.toString();
 	}
 
 	function formatTime(time: number): string {
@@ -155,6 +166,7 @@
 
 <div class="hidden">
 	{#if canPlay && playOnAdd}
+		{toggleExpand()}
 		{fetchMusic(selectedSong)}
 	{/if}
 </div>
@@ -165,7 +177,7 @@
 		? '60px'
 		: '0'};"
 >
-	{#if expand}
+	{#if expand && canPlay}
 		<div class="h-full w-full">
 			<div class="flex justify-between items-center px-10 p-5">
 				<button class="text-dark-accent p-1.5" on:click={toggleExpand}><ArrowDown /></button>
@@ -176,15 +188,56 @@
 					<Menu />
 				</button>
 			</div>
-			<div class="flex w-full items-center justify-center flex-col">
+			<div class="flex w-full items-center justify-center flex-col mt-[20px]">
 				<div class="w-[80%] h-[80%]">
-					<img src={cover} class="w-full h-full" alt="Album Cover" />
+					<img src={cover} class="w-full h-full rounded-[10px]" alt="Album Cover" />
 				</div>
+			</div>
+			<div class="px-[10%] pt-[16px]">
 				<div>
-					<div>details and seek</div>
-					<div>controls</div>
-					<div>queue</div>
+					<div class="flex justify-between items-center font-IBMPlexSans">
+						<div>
+							<h2 class="text-[25px] text-dark-secondary">{currentAudio.title}</h2>
+							<h3 class="text-[16px] text-dark-secondary opacity-[0.7] pt-[1px]">
+								{currentAudio.artistName}
+							</h3>
+						</div>
+						<div>like</div>
+					</div>
+					<input
+						type="range"
+						on:change={handleSeeking}
+						max={duration}
+						value={currentTime}
+						class="pt-[35px] w-full h-[5px]"
+					/>
+					<div class="flex justify-between">
+						<span class="text-dark-secondary text-[15px] opacity-[0.7]"
+							>{formatTime(currentTime)}</span
+						>
+						<span class="text-dark-secondary text-[15px] opacity-[0.7]">{formatTime(duration)}</span
+						>
+					</div>
 				</div>
+				<div class="pt-[20px] flex justify-between items-center">
+					<button><Shuffle /></button>
+					<div class="text-dark-secondary flex justify-between space-x-[20px]">
+						<button>
+							<Previous on:click={previous} />
+						</button>
+						<button
+							class="w-[64px] h-[64px] rounded-[100%] bg-dark-primary m-auto shadow-inner grid grid-cols-1 place-items-center"
+							on:click={togglePlayPause}
+						>
+							{#if paused}<Pause /> {:else} <Play /> {/if}
+						</button>
+						<button on:click={next}>
+							<Next />
+						</button>
+					</div>
+					<button><Repeat /></button>
+				</div>
+				<div>queue</div>
 			</div>
 		</div>
 	{:else}
@@ -208,13 +261,8 @@
 					>
 						<Previous />
 					</button>
-					<button
-						class="p-[5px]"
-						on:click={() => {
-							if (player.paused) player.play();
-							else player.pause();
-						}}
-						>{#if player?.paused}<Play /> {:else} <Pause /> {/if}</button
+					<button class="p-[5px]" on:click={togglePlayPause}
+						>{#if !paused}<Play /> {:else} <Pause /> {/if}</button
 					>
 					<button
 						class="p-[5px]"

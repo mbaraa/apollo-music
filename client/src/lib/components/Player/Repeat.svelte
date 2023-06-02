@@ -1,9 +1,10 @@
 <svg
-	fill="#000000"
-	width="800px"
-	height="800px"
-	viewBox="0 0 256 256"
 	xmlns="http://www.w3.org/2000/svg"
+	fill="currentColor"
+	viewBox="0 0 256 256"
+	stroke-width="1.5"
+	stroke="currentColor"
+	class="w-8 h-8"
 >
 	<g fill-rule="evenodd">
 		<path
