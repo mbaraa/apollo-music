@@ -4,13 +4,25 @@ import Landing from "./components/Landing";
 import Cancel from "./components/Cancel";
 import Intro from "./components/Intro";
 
-function checkSession() {
-  if (localStorage.getItem("token")) return true;
-  return false;
+async function checkSession() {
+  return await fetch(
+    `${import.meta.env.VITE_BACKEND_ADDRESS}/auth/session/check`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: localStorage.getItem("token") ?? "",
+      },
+    }
+  )
+    .then(async (resp) => {
+      localStorage.setItem("token", (await resp.json())["data"]["token"]);
+      return resp.ok;
+    })
+    .catch(() => false);
 }
 
-function gotoApp() {
-  if (checkSession()) {
+async function gotoApp() {
+  if (await checkSession()) {
     window.open(
       `${import.meta.env.VITE_APP_ADDRESS}/sign-in?token=${localStorage.getItem(
         "token"
