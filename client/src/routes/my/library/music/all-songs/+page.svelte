@@ -35,9 +35,9 @@
 				<button
 					class="block w-full"
 					on:click={() => {
-						playNow.set(true);
 						songToPlay.set(song);
 						playingQueue.set(songs);
+						playNow.set(true);
 					}}
 				>
 					<MusicTile music={song} />

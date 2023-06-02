@@ -22,22 +22,25 @@
 	}
 
 	onMount(async () => {
-		const localAlbumCovers: { [keys: string]: string } = JSON.parse(
-			localStorage.getItem("covers") ?? "{}"
-		);
 		albums = fetchAlbums(false);
+		let c = 0;
 		let localCoversAreGood = (await albums).every((a) => {
-			const cover = localAlbumCovers[a.publicId];
+			const cover = localStorage.getItem("cover_" + a.publicId);
+			console.log(cover);
 			if (cover) {
+				c++;
 				return true;
 			}
 			return false;
 		});
+		console.log("good", localCoversAreGood, c);
 
-		if (!localAlbumCovers || !localCoversAreGood) {
+		if (!localCoversAreGood) {
 			albums = fetchAlbums(true);
+			(await albums).flat().forEach((a) => {
+				localStorage.setItem("cover_" + a.publicId, a.coverB64);
+			});
 		}
-		console.log(localAlbumCovers);
 	});
 </script>
 
