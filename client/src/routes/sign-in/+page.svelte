@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
+	import { page } from "$app/stores";
 	import type { User } from "$lib/entities";
 	import { translate } from "$lib/locale";
 	import { TranslationKeys } from "$lib/strings/keys";
@@ -26,8 +27,17 @@
 	}
 
 	onMount(async () => {
-		const validSession = await Requests.makeAuthRequest("GET", "auth/session/check", null)
-			.then((resp) => {
+		const validSession = await Requests.makeRequest(
+			"GET",
+			"auth/session/check",
+			null,
+			{},
+			{
+				Authorization: localStorage.getItem("token") ?? $page.url.searchParams.get("token") ?? ""
+			}
+		)
+			.then(async (resp) => {
+				localStorage.setItem("token", $page.url.searchParams.get("token") ?? "");
 				return resp.ok;
 			})
 			.catch(() => false);

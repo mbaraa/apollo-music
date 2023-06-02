@@ -87,7 +87,18 @@ func (s *SubscriptionHelper) StartSubscription(token, cardToken string, plan enu
 			return response.Build(errors.InternalServerError, nil)
 		}
 
-		return response.Build(errors.None, nil)
+		sessionToken, err := s.jwtUtil.Sign(entities.JSON{
+			"email":    dbUser[0].Email,
+			"publicId": dbUser[0].PublicId,
+		}, jwt.SessionToken, time.Now().Add(time.Hour*24*30))
+		if err != nil {
+			log.Println(err)
+			return response.Build(errors.InternalServerError, nil)
+		}
+
+		return response.Build(errors.None, map[string]string{
+			"token": sessionToken,
+		})
 	}
 
 	// LMAO
@@ -130,7 +141,18 @@ func (s *SubscriptionHelper) StartSubscription(token, cardToken string, plan enu
 		return response.Build(errors.InternalServerError, nil)
 	}
 
-	return response.Build(errors.None, nil)
+	sessionToken, err := s.jwtUtil.Sign(entities.JSON{
+		"email":    dbUser[0].Email,
+		"publicId": dbUser[0].PublicId,
+	}, jwt.SessionToken, time.Now().Add(time.Hour*24*30))
+	if err != nil {
+		log.Println(err)
+		return response.Build(errors.InternalServerError, nil)
+	}
+
+	return response.Build(errors.None, map[string]string{
+		"token": sessionToken,
+	})
 }
 
 func (s *SubscriptionHelper) CancelSubscription(token string) (entities.JSON, int) {

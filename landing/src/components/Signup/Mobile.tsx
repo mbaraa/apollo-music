@@ -97,7 +97,7 @@ export default function Mobile() {
             <h3 className="w-full text-center mt-[35px]">
               Already have an account? Log in{" "}
               <a
-                href="https://apollo-music.app/sign-in"
+                href={import.meta.env.VITE_APP_ADDRESS}
                 className="underline hover:opacity-[0.9]"
               >
                 here
