@@ -12,7 +12,6 @@
 	import ArrowDown from "./ArrowDown.svelte";
 	import ArrowUp from "./ArrowUp.svelte";
 	import Menu from "./Menu.svelte";
-	import postcss from "postcss";
 	import Shuffle from "./Shuffle.svelte";
 	import Repeat from "./Repeat.svelte";
 
@@ -88,6 +87,8 @@
 		}
 		let nextSongIndex =
 			(playlist.findIndex((m) => m.publicId === currentAudio.publicId) + 1) % playlist.length;
+		paused = false;
+
 		//while (!isPlayable(playlist[nextSongIndex].)) {
 		//	nextSongIndex = (nextSongIndex + 1) % playlist.length;
 		//}
@@ -101,6 +102,7 @@
 		}
 		let prevSongIndex =
 			(playlist.findIndex((m) => m.publicId === currentAudio.publicId) - 1) % playlist.length;
+		paused = false;
 		fetchMusic(playlist[prevSongIndex]);
 	}
 
@@ -116,6 +118,7 @@
 			return;
 		}
 		next();
+		paused = false;
 	}
 
 	function random() {
@@ -153,6 +156,7 @@
 		player.src = `${config["backendAddress"]}/storage/${music.audio.publicPath}?token=${
 			localStorage.getItem("token") ?? ""
 		}`;
+		paused = false;
 		player.load();
 		player.play();
 		currentAudio = music;
@@ -175,7 +179,7 @@
 	class="text-dark-secondary w-[100vw] bg-dark-neutral"
 	style="height: {height}; position: {expand ? 'absolute' : 'inherit'}; bottom: {expand
 		? '60px'
-		: '0'};"
+		: '0'}; display: {canPlay ? 'block' : 'none'}"
 >
 	{#if expand && canPlay}
 		<div class="h-full w-full">
@@ -222,14 +226,14 @@
 				<div class="pt-[20px] flex justify-between items-center">
 					<button><Shuffle /></button>
 					<div class="text-dark-secondary flex justify-between space-x-[20px]">
-						<button>
-							<Previous on:click={previous} />
+						<button on:click={previous}>
+							<Previous />
 						</button>
 						<button
 							class="w-[64px] h-[64px] rounded-[100%] bg-dark-primary m-auto shadow-inner grid grid-cols-1 place-items-center"
 							on:click={togglePlayPause}
 						>
-							{#if paused}<Pause /> {:else} <Play /> {/if}
+							{#if paused}<Play /> {:else} <Pause /> {/if}
 						</button>
 						<button on:click={next}>
 							<Next />
@@ -241,7 +245,7 @@
 			</div>
 		</div>
 	{:else}
-		<div class="">
+		<div class="" on:click={toggleExpand} on:keydown={() => {}}>
 			<div class="p-[10px] px-[25px] flex justify-between items-center">
 				<div
 					class="float-left text-dark-secondary font-IBMPlexSans pb-[10px] flex items-center"
@@ -255,27 +259,35 @@
 				<div class="text-dark-secondary mb-[10px]">
 					<button
 						class="p-[5px]"
-						on:click={() => {
+						on:click={(e) => {
+							e.stopPropagation();
 							previous();
 						}}
 					>
 						<Previous />
 					</button>
-					<button class="p-[5px]" on:click={togglePlayPause}
-						>{#if !paused}<Play /> {:else} <Pause /> {/if}</button
-					>
 					<button
 						class="p-[5px]"
-						on:click={() => {
+						on:click={(e) => {
+							e.stopPropagation();
+							togglePlayPause();
+						}}
+					>
+						{#if paused}<Play /> {:else} <Pause /> {/if}
+					</button>
+					<button
+						class="p-[5px]"
+						on:click={(e) => {
+							e.stopPropagation();
 							next();
 						}}><Next /></button
 					>
-					<button
-						class="p-[5px] text-dark-accent"
-						on:click={() => {
-							toggleExpand();
-						}}><ArrowUp /></button
-					>
+					<!-- <button -->
+					<!-- 	class="p-[5px] text-dark-accent" -->
+					<!-- 	on:click={() => { -->
+					<!-- 		toggleExpand(); -->
+					<!-- 	}}><ArrowUp /></button -->
+					<!-- > -->
 				</div>
 			</div>
 
