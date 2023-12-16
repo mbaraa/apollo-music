@@ -14,6 +14,7 @@
 	import Menu from "./Menu.svelte";
 	import Shuffle from "./Shuffle.svelte";
 	import Repeat from "./Repeat.svelte";
+	import { onMount } from "svelte";
 
 	let playlist: Music[];
 	let selectedSong: Music = {} as Music;
@@ -147,6 +148,58 @@
 		return `${hh > 0 ? `${formatNumber(hh)}:` : ""}${formatNumber(mm)}:${formatNumber(ss)}`;
 	}
 
+	function setMediaSession() {
+		if ("mediaSession" in navigator) {
+			navigator.mediaSession.metadata = new MediaMetadata({
+				title: currentAudio.title,
+				artist: currentAudio.artistName,
+				album: currentAudio.albumTitle,
+				artwork: [
+					{
+						src: cover,
+						sizes: "96x96",
+						type: "image/png"
+					}
+				]
+			});
+
+			navigator.mediaSession.setActionHandler("play", () => {
+				player?.play();
+			});
+			navigator.mediaSession.setActionHandler("pause", () => {
+				player?.pause();
+			});
+			navigator.mediaSession.setActionHandler("stop", () => {
+				player?.pause();
+				player.currentTime = 0;
+			});
+			navigator.mediaSession.setActionHandler("seekbackward", () => {
+				let seekTo = -10;
+				if (currentTime + seekTo < 0) {
+					seekTo = 0;
+				}
+				player.currentTime += seekTo;
+			});
+			navigator.mediaSession.setActionHandler("seekforward", () => {
+				let seekTo = +10;
+				if (currentTime + seekTo > duration) {
+					seekTo = 0;
+				}
+				player.currentTime += seekTo;
+			});
+			navigator.mediaSession.setActionHandler("seekto", (a: MediaSessionActionDetails) => {
+				const seekTime = Number(a.seekOffset);
+				player.currentTime = seekTime;
+			});
+			navigator.mediaSession.setActionHandler("previoustrack", () => {
+				previous();
+			});
+			navigator.mediaSession.setActionHandler("nexttrack", () => {
+				next();
+			});
+		}
+	}
+
 	async function fetchMusic(music: Music) {
 		if (player) {
 			player.pause();
@@ -161,7 +214,19 @@
 		player.play();
 		currentAudio = music;
 		pageTitle = currentAudio.title + translate(TranslationKeys.TITLE_PLAYING_SUFFIX);
+		setMediaSession();
 	}
+
+	onMount(() => {
+		window.addEventListener("popstate", (e) => {
+			if (expand && canPlay) {
+				e.stopImmediatePropagation();
+				toggleExpand();
+				return;
+			}
+			history.go(-1);
+		});
+	});
 </script>
 
 <svelte:head>
@@ -282,12 +347,6 @@
 							next();
 						}}><Next /></button
 					>
-					<!-- <button -->
-					<!-- 	class="p-[5px] text-dark-accent" -->
-					<!-- 	on:click={() => { -->
-					<!-- 		toggleExpand(); -->
-					<!-- 	}}><ArrowUp /></button -->
-					<!-- > -->
 				</div>
 			</div>
 
