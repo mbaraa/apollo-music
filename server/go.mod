@@ -3,11 +3,13 @@ module github.com/mbaraa/apollo-music
 go 1.20
 
 require (
+	github.com/dhowden/tag v0.0.0-20220618230019-adf36e896086
 	github.com/gofiber/fiber/v2 v2.43.0
 	github.com/gofiber/websocket/v2 v2.1.5
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/joho/godotenv v1.5.1
 	github.com/joomcode/errorx v1.1.0
+	github.com/stripe/stripe-go/v74 v74.17.0
 	golang.org/x/crypto v0.8.0
 	gorm.io/driver/mysql v1.4.7
 	gorm.io/gorm v1.24.6
@@ -15,7 +17,6 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
-	github.com/dhowden/tag v0.0.0-20220618230019-adf36e896086 // indirect
 	github.com/fasthttp/websocket v1.5.2 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -29,7 +30,6 @@ require (
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/savsgio/dictpool v0.0.0-20221023140959-7bf2e61cea94 // indirect
 	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee // indirect
-	github.com/stripe/stripe-go/v74 v74.17.0 // indirect
 	github.com/tinylib/msgp v1.1.8 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.45.0 // indirect
