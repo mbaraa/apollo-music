@@ -10,8 +10,8 @@
 	let albums: Promise<Album[]>;
 
 	async function fetchAlbums(fetchCovers: boolean) {
-		return (await Requests.makeAuthRequest("GET", "library/albums", null, {
-			"fetch-covers": fetchCovers
+		albums = (await Requests.makeAuthRequest("GET", "library/albums", null, {
+			"fetch-covers": true,
 		})
 			.then((resp) => resp.json())
 			.then((resp) => resp["data"] as Album[])
@@ -22,25 +22,7 @@
 	}
 
 	onMount(async () => {
-		albums = fetchAlbums(false);
-		let c = 0;
-		let localCoversAreGood = (await albums).every((a) => {
-			const cover = localStorage.getItem("cover_" + a.publicId);
-			console.log(cover);
-			if (cover) {
-				c++;
-				return true;
-			}
-			return false;
-		});
-		console.log("good", localCoversAreGood, c);
-
-		if (!localCoversAreGood) {
-			albums = fetchAlbums(true);
-			(await albums).flat().forEach((a) => {
-				localStorage.setItem("cover_" + a.publicId, a.coverB64);
-			});
-		}
+		await fetchAlbums(false);
 	});
 </script>
 

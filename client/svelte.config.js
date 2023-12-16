@@ -6,9 +6,8 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-		adapter: adapter({
-			ssr: false
-		})
+		adapter: adapter(),
+		outDir: "build"
 	}
 };
 
